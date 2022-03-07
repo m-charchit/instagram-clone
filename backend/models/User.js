@@ -18,6 +18,24 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    bio:{
+        type:String,
+        required:true
+    },
+    followers:[{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:"user"
+    }],
+    followings:[{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:"user"
+    }],
+    private:{
+        type:Boolean,
+        default:true
+    }
 });
 const user = mongoose.model('user', UserSchema);
 module.exports = user

@@ -18,13 +18,21 @@ const PostSchema = new Schema({
           default: "images/defaultPost.jpg",
         },
       },
-      
+      like:[{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref:"user"
+      }],
       user: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: "User",
+        ref: "user",
       },
+      date: {
+        type: Date,
+        default: Date.now
+    },
 
 })
-const post = mongoose.model('user', PostSchema);
-module.exports = post
+
+module.exports = mongoose.model('post', PostSchema);
