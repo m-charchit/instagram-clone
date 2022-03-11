@@ -9,6 +9,11 @@ const CommentSchema = new Schema({
         type:Date,
         default:Date.now
     },
+    parentComment:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:"comment"
+    },
     user:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
@@ -20,3 +25,4 @@ const CommentSchema = new Schema({
         ref:"post"
     }
 })
+module.exports = mongoose.model('comment', CommentSchema);

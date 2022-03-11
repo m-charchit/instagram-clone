@@ -26,6 +26,6 @@ router.post("/account/edit",FetchUser,async(req,res)=>{
     } catch (error) {
         
     }
-})
+})  
 
 module.exports = router
