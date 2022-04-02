@@ -28,4 +28,31 @@ router.post("/account/edit",FetchUser,async(req,res)=>{
     }
 })  
 
+router.post("/follow",FetchUser,async (req,res)=>{
+    try {
+        const {userId} = req.body
+        // @ts-ignore
+        const userToFollow = await User.findByIdAndUpdate(userId,{$addToSet:{followers:req.user.id}},{new:true})
+        // @ts-ignore
+        const followingUser = await User.findByIdAndUpdate(req.user.id,{$addToSet:{followings:userId}})
+        res.json(userToFollow)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+    }
+})
+
+router.post("/unfollow",FetchUser,async (req,res)=>{
+    try {
+        const {userId} = req.body
+        // @ts-ignore
+        const userToFollow = await User.findByIdAndUpdate(userId,{$pull:{followers:req.user.id}},{new:true})
+        // @ts-ignore
+        const followingUser = await User.findByIdAndUpdate(req.user.id,{$pull:{followings:userId}})
+        res.json(userToFollow)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+    }
+})
 module.exports = router

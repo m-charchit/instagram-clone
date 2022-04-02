@@ -11,7 +11,6 @@ const CommentSchema = new Schema({
     },
     parentComment:{
         type:mongoose.Schema.Types.ObjectId,
-        required:true,
         ref:"comment"
     },
     user:{

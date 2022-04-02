@@ -26,18 +26,48 @@ router.post("/write", FetchUser , async(req,res)=>{
         res.status(500).send("Internal Server Error");
     }
 })
-router.post("/edit", FetchUser ,(req,res)=>{
-
-})
-router.post("/delete", FetchUser , async (req,res)=>{
+router.post("/edit", FetchUser , async (req,res)=>{
     try {
-        const {commentId} = req.body
-        await Comment.deleteMany({parentCommentId:commentId})
-        const comment = await Comment.findByIdAndDelete(commentId)
+        const {commentId,com} = req.body
+        // @ts-ignore
+        const comment = await Comment.findOneAndUpdate({_id:commentId,user:req.user.id},{comment:com},{new:true})
         res.json(comment)
     } catch (error) {
-        
+        console.log(error);
+        res.status(500).send("Internal Server Error");
     }
 })
+
+async function getId(result,finalList){
+    for(let i of result){
+        let a  = await Comment.find({parentComment:i._id})
+        finalList.push(i._id)
+        if (a.length != 0 && result.indexOf(i)==result.length-1){
+            await getId(a,finalList)
+        } else if (result.indexOf(i)!=result.length-1) {
+            continue
+        } else{
+            return 
+        }
+    }
+    return finalList
+}
+
+router.post("/delete", FetchUser , async (req,res)=>{
+    try {
+        const {commentId} = req.body    
+        
+        // @ts-ignore
+        const a = await getId([await Comment.findOne({_id:commentId,user:req.user.id})],[])
+        // @ts-ignore
+        await Comment.deleteMany({_id:{$in:a}})
+        res.json(a)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+    }
+})
+
+
 
 module.exports = router

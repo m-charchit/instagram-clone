@@ -20,7 +20,6 @@ const UserSchema = new Schema({
     },
     bio:{
         type:String,
-        required:true
     },
     followers:[{
         type:mongoose.Schema.Types.ObjectId,
