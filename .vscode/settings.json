@@ -1,0 +1,4 @@
+{
+    "debug.confirmOnExit": "always",
+    "terminal.integrated.confirmOnExit": "always"
+}
