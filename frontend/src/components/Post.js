@@ -17,7 +17,7 @@ function Post() {
               <div className="flex space-x-3 float-left">
                 <i className="far fa-heart text-2xl cursor-pointer"></i>
                 <i className="far fa-comment text-2xl cursor-pointer"></i>
-                <i className="fas fa-share text-2xl cursor-pointer"></i>
+                <i className="far fa-paper-plane text-2xl cursor-pointer"></i>
               </div>
               <i className="far fa-bookmark text-2xl cursor-pointer float-right"></i>
             </div>

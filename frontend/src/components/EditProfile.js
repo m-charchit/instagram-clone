@@ -4,7 +4,7 @@ function EditProfile() {
   return (
     <div className="md:container mx-auto lg:px-60 md:px-20 py-5 px-5">
         <div className="flex flex-col space-y-4 md:flex-row">
-            <img src="default.jpg" alt="" className='w-60 h-60 self-center rounded-full'/>
+            <img src="/default.jpg" alt="" className='w-60 h-60 self-center rounded-full'/>
             <div className="flex flex-col space-y-9 w-full px-5">
                 <div className='flex flex-col '>
             <label htmlFor="NameInput">Name</label>
