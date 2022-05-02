@@ -9,7 +9,8 @@ const fetchUser = require("../middleware/fetchUser")
 const JWT_STRING = "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
 router.post('/register', [
-    body('name', "Enter a valid Name").isLength({ min: 5, max: 10 }),
+    body('username','Enter a valid Username').isLength({min:5}),
+    body('name', "Enter a valid Name").isLength({ min: 5, max: 40 }),
     body('email', "Enter a valid Email").isEmail(),
     body('password', "Password must be atleast 5 characters").isLength({ min: 5 })],
     async (req, res) => {
@@ -26,6 +27,7 @@ router.post('/register', [
             const salt = await bycrypt.genSalt(10);
             const secPass = await bycrypt.hash(req.body.password, salt)
             user = await User.create({
+                username: req.body.username,
                 name: req.body.name,
                 email: req.body.email,
                 password: secPass,
