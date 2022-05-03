@@ -1,7 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import {logout}from "../state/Actions/auth"
+
 function Navbar() {
+  const dispatch = useDispatch()
+  const navigate =useNavigate()
+  
+  const handleLogout = () => {
+      dispatch(logout())
+      navigate("/login")
+    }
+  
   return (
     <nav className="border-b px-4 py-3 bg-white">
       <div className="flex items-center md:justify-evenly justify-between">
@@ -17,7 +28,7 @@ function Navbar() {
             aria-hidden="true"
           ></i>
 
-          <div className="absolute w-80 h-80 py-2 hidden justify-center peer-focus:flex bg-white shadow-md top-11 rounded-md border border-gray-300">
+          <div className="absolute z-20 w-80 h-80 py-2 hidden justify-center peer-focus:flex bg-white shadow-md top-11 rounded-md border border-gray-300">
             <div className="w-9 overflow-hidden inline-block absolute -top-4">
               <div className=" h-4 w-4 bg-white rotate-45 transform origin-bottom-left border-gray-300 border"></div>
             </div>
@@ -29,46 +40,13 @@ function Navbar() {
                 <p className="text-sm text-slate-500">Make My  trips</p>
               </div>
               </div>
-              <div className="flex px-3 py-2 space-x-3 hover:bg-gray-100 cursor-pointer ">
-              <img src="/default.jpg" alt="" className="w-12 h-12 rounded-full"/>
-              <div>
-                <p className="font-semibold">makemytrip</p>
-                <p className="text-sm text-slate-500">Make my trips</p>
-              </div>
-              </div>
-              <div className="flex px-3 py-2 space-x-3 hover:bg-gray-100 cursor-pointer ">
-              <img src="/default.jpg" alt="" className="w-12 h-12 rounded-full"/>
-              <div>
-                <p className="font-semibold">makemytrip</p>
-                <p className="text-sm text-slate-500">Make my trips</p>
-              </div>
-              </div>
-              <div className="flex px-3 py-2 space-x-3 hover:bg-gray-100 cursor-pointer ">
-              <img src="/default.jpg" alt="" className="w-12 h-12 rounded-full"/>
-              <div>
-                <p className="font-semibold">makemytrip</p>
-                <p className="text-sm text-slate-500">Make my trips</p>
-              </div>
-              </div>
-              <div className="flex px-3 py-2 space-x-3 hover:bg-gray-100 cursor-pointer ">
-              <img src="/default.jpg" alt="" className="w-12 h-12 rounded-full"/>
-              <div>
-                <p className="font-semibold">makemytrip</p>
-                <p className="text-sm text-slate-500">Make my trips</p>
-              </div>
-              </div>
-              <div className="flex px-3 py-2 space-x-3 hover:bg-gray-100 cursor-pointer ">
-              <img src="/default.jpg" alt="" className="w-12 h-12 rounded-full"/>
-              <div>
-                <p className="font-semibold">makemytrip</p>
-                <p className="text-sm text-slate-500">Make my trips</p>
-              </div>
-              </div>
             </div>
             <span className="text-gray-500 hidden">Search for someone</span>
           </div>
         </div>
         <div className="flex items-center">
+          {localStorage.getItem("token") ?
+          <>
           <Link to="/">
             <i className="fas fa-home text-2xl mx-2"></i>
           </Link>
@@ -89,7 +67,7 @@ function Navbar() {
               />
             </a>
 
-            <ul className="dropdown-menu shadow-md hover:block absolute right-10 hidden bg-white pt-1 w-52 peer-focus:block">
+            <ul className="dropdown-menu z-10 shadow-md hover:block absolute right-10 hidden bg-white pt-1 w-52 peer-focus:block">
               <li className="">
                 <Link
                   to="profile/charchit.dahiya"
@@ -108,17 +86,21 @@ function Navbar() {
               </li>
               <hr />
               <li className="">
-                <a
-                  className="rounded-b  hover:bg-gray-100 py-2 px-4 block whitespace-no-wrap"
-                  href="#"
+                <button
+                  className="rounded-b  hover:bg-gray-100 py-2 px-4 block whitespace-no-wrap w-full text-left"
+                  onClick={handleLogout}
                 >
                   Log Out
-                </a>
+                </button>
               </li>
             </ul>
-          </div>
-          {/* <Link to="/login" className="bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded bg-opacity-90 md:mr-2" >Log In</Link>
-          <Link to="/register" className="px-2 py-1 text-blue-500 font-semibold text-sm rounded bg-opacity-90 ml-2" >Sign Up</Link> */}
+          </div> 
+          </>:
+          <>
+          <Link to="/login" className="bg-blue-500 px-2 py-1 text-white font-semibold text-sm rounded bg-opacity-90 md:mr-2" >Log In</Link>
+          <Link to="/register" className="px-2 py-1 text-blue-500 font-semibold text-sm rounded bg-opacity-90 ml-2" >Sign Up</Link>
+          </>
+  }
         </div>
       </div>
     </nav>

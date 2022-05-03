@@ -15,6 +15,17 @@ router.get("/fetch", FetchUser ,  async (req, res) => {
   }
 });
 
+router.get("/fetchUserPosts",FetchUser,async (req,res) => {
+  try {
+    // @ts-ignore
+    const posts = await Post.find({user:req.user.id});
+    res.json(posts)
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+})
+
 router.post("/upload", FetchUser, async (req, res) => {
   try {
     const { caption } = req.body;

@@ -22,7 +22,7 @@ export const login = (username,password) => (dispatch) => {
         (data) => {
             dispatch({
                 type: "LOGIN_SUCCESS",
-                payload : {user: data}
+                payload : {user: data.user}
             })
             return Promise.resolve()
         },
@@ -34,7 +34,7 @@ export const login = (username,password) => (dispatch) => {
         }
     )
 }
-export const logout = (dispatch) => {
+export const logout = () => (dispatch) => {
     AuthService.logout();
     dispatch({
         type : "LOGOUT"

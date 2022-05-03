@@ -37,9 +37,8 @@ router.post('/register', [
                     id: user.id
                 }
             }
-            const auth_token = jwt.sign(data, JWT_STRING)
 
-            res.json({success:true, auth_token })
+            res.json({success:true})
         } catch (error) {
             console.log(error)
             res.status(500).send("Internal Server Error")
@@ -47,7 +46,7 @@ router.post('/register', [
     })
 
 router.post('/login', [
-    body('email', "Enter a valid Email").isEmail(),
+    body("username","username can't be blank").exists(),
     body('password', "Password can't be blank").exists(),
 ],      
     async (req, res) => {
@@ -55,15 +54,15 @@ router.post('/login', [
         if (!errors.isEmpty()) {    
             return res.status(400).json({ errors: errors.array() });
         }
-        const { email, password } = req.body
+        const { username, password } = req.body
         try {
-            let user = await User.findOne({ email })
+            let user = await User.findOne({ username })
             if (!user) {
-                return res.status(400).json({ errors: "Incorrect email or password" })
+                return res.status(400).json({ errors: "Incorrect username or password" })
             }
             const passwordCompare = await bycrypt.compare(password, user.password)
             if (!passwordCompare) {
-                return res.status(400).json({ errors: "Incorrect email or password" })
+                return res.status(400).json({ errors: "Incorrect username or password" })
             }
             const data = {
                 user: {
@@ -71,7 +70,8 @@ router.post('/login', [
                 }
             }
             const auth_token = jwt.sign(data, JWT_STRING)
-            res.json({success:true, auth_token })
+            const cleanUser = await User.findById(user.id).populate("followers").populate("followings").select("-password -_v")
+            res.json({success:true, auth_token ,user:cleanUser})
 
         } catch (error) {
             console.log(error)
