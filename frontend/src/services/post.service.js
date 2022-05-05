@@ -1,12 +1,8 @@
 import axios from "axios";
-
+import { headers } from "../constant/header";
 const API_URL = "http://localhost:5000/api/post/";
 
-const headers = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-    'auth-token':localStorage.getItem("token")
-  }
+
 const fetchPosts = () => {
     return axios.get(API_URL+"fetch",{
         headers:headers

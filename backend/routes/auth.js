@@ -4,7 +4,6 @@ const bycrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 const jwt = require("jsonwebtoken")
 const User = require("../models/User")
-const fetchUser = require("../middleware/fetchUser")
 
 const JWT_STRING = "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
@@ -70,8 +69,7 @@ router.post('/login', [
                 }
             }
             const auth_token = jwt.sign(data, JWT_STRING)
-            const cleanUser = await User.findById(user.id).populate("followers").populate("followings").select("-password -_v")
-            res.json({success:true, auth_token ,user:cleanUser})
+            res.json({success:true, auth_token })
 
         } catch (error) {
             console.log(error)
@@ -79,17 +77,6 @@ router.post('/login', [
         }
     })
 
-router.post('/getuser', fetchUser ,async (req, res) => {
 
-        try {
-            // @ts-ignore
-            const user = await User.findById(req.user.id).select("-password")
-            
-            res.send(user)
-        } catch (error) {
-            console.log(error)
-            res.status(500).send("Internal Server Error")
-        }
-    })
     
 module.exports = router

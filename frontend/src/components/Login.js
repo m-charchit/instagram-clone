@@ -14,7 +14,8 @@ function Login() {
     .then(()=>{
       navigate("/")
     })
-    .catch(()=>{
+    .catch((error)=>{
+      console.log(error)
       alert("Error")
     })
   }

@@ -1,13 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {logout}from "../state/Actions/auth"
 
 function Navbar() {
   const dispatch = useDispatch()
   const navigate =useNavigate()
-  
+  // @ts-ignore
+  const {isLoggedIn} = useSelector((state)=>state.auth)
   const handleLogout = () => {
       dispatch(logout())
       navigate("/login")
@@ -45,7 +46,7 @@ function Navbar() {
           </div>
         </div>
         <div className="flex items-center">
-          {localStorage.getItem("token") ?
+          {isLoggedIn ?
           <>
           <Link to="/">
             <i className="fas fa-home text-2xl mx-2"></i>

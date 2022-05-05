@@ -4,6 +4,19 @@ const FetchUser = require("../middleware/FetchUser");
 const Post = require('../models/Post');
 const User = require('../models/User');
 
+router.post('/getCurrentUser', FetchUser ,async (req, res) => {
+
+    try {
+        // @ts-ignore
+        const user = await User.findById(req.user.id).populate("followers").populate("followings").select("-password -_v")
+        
+        res.json(user)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Internal Server Error")
+    }
+})
+
 router.get("/user/:id",async(req,res)=>{
     try {
         
@@ -55,4 +68,5 @@ router.post("/unfollow",FetchUser,async (req,res)=>{
         res.status(500).send("Internal Server Error");
     }
 })
+
 module.exports = router

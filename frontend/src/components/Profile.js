@@ -2,18 +2,21 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserPosts } from "../state/Actions/post";
+import { getCurrentUser } from "../state/Actions/user";
 
 function Profile() {
   const dispatch = useDispatch()
   // @ts-ignore
-  const { user } = useSelector((state) => state.auth);
-  console.log(user)
+  const { user } = useSelector((state) => state.user);
   // @ts-ignore
   const { posts } = useSelector((state) => state.post)
-  console.log(posts)
-  useEffect(() => {
-      dispatch(fetchUserPosts())
 
+  useEffect(() => {
+    
+    // @ts-ignore
+    dispatch(getCurrentUser())
+    // @ts-ignore
+    dispatch(fetchUserPosts())
   }, [])
   
   return (
@@ -28,7 +31,7 @@ function Profile() {
           <div className="ml-7 md:ml-24">
             <div className="flex mt-3 md:mt-4  relative flex-col md:flex-row">
               <div className="flex">
-                <span className="text-3xl font-thin mr-2">{user.username}</span>
+                <span className="text-3xl font-thin mr-2">{user && user.username}</span>
                 <i className="fas fa-ellipsis-h text-lg  md:absolute -right-4 mt-1"></i>
               </div>
               <div className="flex space-x-3 mt-4 md:mt-0 items-center">
@@ -45,13 +48,13 @@ function Profile() {
             </div>
             <div className="md:flex mt-7 hidden">
               <span className="mr-7 flex">
-                <b className="font-semibold mr-1">{posts.length}</b> posts
+                <b className="font-semibold mr-1">{posts && posts.length}</b> posts
               </span>
               <span className="mr-7 flex">
-                <b className="font-semibold mr-1">{user.followers.length}</b> followers
+                <b className="font-semibold mr-1">{ user && user.followers.length}</b> followers
               </span>
               <span className="flex">
-                <b className="font-semibold mr-1">{user.followings.length}</b> following
+                <b className="font-semibold mr-1">{user && user.followings.length}</b> following
               </span>
             </div>
           </div>
@@ -65,15 +68,15 @@ function Profile() {
         </div>
         <div className="md:hidden mt-7 flex justify-around text-sm text-center border-t py-3">
           <span className="text-gray-600 w-1/3 ">
-            <b className="font-semibold">{posts.length}</b>
+            <b className="font-semibold">{posts && posts.length}</b>
             <br /> posts
           </span>
           <span className="text-gray-600 w-1/3">
-            <b className="font-semibold">{user.followers.length}</b>
+            <b className="font-semibold">{user && user.followers.length}</b>
             <br /> followers
           </span>
           <span className="text-gray-600 w-1/3">
-            <b className="font-semibold ">{user.followings.length}</b> <br /> following
+            <b className="font-semibold ">{user && user.followings.length}</b> <br /> following
           </span>
         </div>
       </header>

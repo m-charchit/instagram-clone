@@ -1,5 +1,5 @@
 
-const initialState = {token:localStorage.getItem("token")}
+const initialState = {isLoggedIn: localStorage.getItem("token") ? true : false}
 const auth = (state=initialState , action) => {
 
     switch (action.type) {
@@ -17,19 +17,16 @@ const auth = (state=initialState , action) => {
             return {
                 ...state,
                 isLoggedIn : true,
-                user: action.payload.user
             }
         case "LOGIN_FAIL":
             return {
                 ...state,
                 isLoggedIn : false,
-                user:null
             }
         case "LOGOUT":
             return {
                 ...state,
                 isLoggedIn:false,
-                user:null
             }
         default:
             return state;
