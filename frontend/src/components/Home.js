@@ -42,17 +42,19 @@ function Home() {
         </div>
       </div>
       
-      <div className="flex-row lg:flex-col flex lg:mt-12 pl-4 w-1/3 ">
-              <span className="hidden lg:block"><ProfileCard imgSize={16}/></span>
-        {/* <p className="text-gray-400 font-semibold ml-4 mt-3">
+      <div className="flex-row lg:flex-col flex lg:mt-12 pl-5 lg:w-1/3 w-full my-2 bg-white lg:bg-inherit border lg:border-0 py-10 lg:py-0 relative space-x-2 overflow-auto">
+              <span className="hidden lg:block"><ProfileCard /></span>
+        <p className="text-gray-400 font-semibold lg:ml-4 lg:my-3.5 absolute lg:relative top-1 ">
           Suggestion For You
-        </p> */}
-        <ProfileCard imgSize={9}/>
-        <ProfileCard imgSize={9}/>
-        <ProfileCard imgSize={9}/>
+        </p>
+        <ProfileCard />
+        <ProfileCard />
+        <ProfileCard />
+        <ProfileCard />
+        <ProfileCard />
             </div>
       </div>
-      <div className="flex flex-col space-y-6 lg:w-2/3 lg:-mt-40">
+      <div className="flex flex-col space-y-6 lg:w-2/3 lg:-mt-72">
         <Post/>
       </div>
       

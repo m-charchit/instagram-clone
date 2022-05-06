@@ -1,14 +1,14 @@
 import React from 'react'
 
-function ProfileCard(props) {
+function ProfileCard() {
   return (
-    <div className="flex flex-col lg:flex-row px-3 py-2 space-y-2 lg:space-x-3 cursor-pointer items-center bg-white lg:bg-none">
-              <img src="/default.jpg" alt="" className={`w-${props.imgSize} h-${props.imgSize} rounded-full`}/>
-              <div className="w-full">
+    <div className="flex flex-col lg:flex-row py-2 lg:space-x-3 cursor-pointer text-center lg:text-left items-center bg-white lg:bg-inherit border lg:border-0 ">
+              <img src="/default.jpg" alt="" className={`w-20 h-20 lg:w-9 lg:h-9 rounded-full`}/>
+              <div className="w-full mx-10 lg:mx-0 mt-1 lg:mt-0">
                 <p className="font-semibold">charchit</p>
                 <p className="text-sm text-slate-500">CHARCHIT</p>
               </div>
-              <button className="outline-none text-blue-600 text-sm font-semibold hover:text-blue-700 ">
+              <button className="outline-none lg:text-blue-600 text-white text-sm font-semibold lg:hover:text-blue-700 bg-blue-500 lg:bg-white px-2 py-1 rounded-sm my-3 lg:my-0">
               Profile
             </button>
               </div>
