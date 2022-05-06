@@ -61,10 +61,12 @@ function Profile() {
         </div>
         <div className="w-max mt-5 pl-5 md:pl-7 md:-mt-14 md:ml-64 grid gap-y-2">
           <span className="font-semibold md:text-lg">Charchit</span>
+          {user && user.followers.length !== 1 && 
           <span className="text-sm text-gray-500">
-            Followed by <a className="font-bold">arayan</a>,{" "}
-            <a className="font-bold">ikansh</a> +10 more
+            Followed by <a className="font-bold">{ user.followers[0]}</a>,
+            <a className="font-bold">{user.followers[1]}</a> +{user.followers.length-2} more
           </span>
+          }
         </div>
         <div className="md:hidden mt-7 flex justify-around text-sm text-center border-t py-3">
           <span className="text-gray-600 w-1/3 ">
@@ -91,15 +93,24 @@ function Profile() {
           </a>
         </div>
         <div className="flex flex-wrap ">
-          <div className="w-1/3 p-px md:px-3 md:pb-6">
-            <div className="relative pb-full" style={{ paddingBottom: "100%" }}>
-              <img
-                src="https://images.unsplash.com/photo-1502791451862-7bd8c1df43a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-                className="w-full h-full object-cover absolute "
-                alt=""
-              />
+          {posts && posts.map((post) => {
+            return (
+              <div className="w-1/3 p-px md:px-3 md:pb-6 group cursor-pointer" key={post._id}>
+              <div className="relative pb-full" style={{ paddingBottom: "100%" }}>
+                <img
+                  src="https://images.unsplash.com/photo-1502791451862-7bd8c1df43a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+                  className="w-full h-full object-cover absolute group-hover:brightness-75"
+                  alt=""
+                  />
+                <div className="w-full h-full absolute flex justify-center items-center space-x-7">
+                  <span className="font-semibold text-white"><i className="fas fa-heart text-xl text-white align-middle"></i> {post.like.length}</span>
+                  <span className="font-semibold text-white"><i className="fas fa-comment text-xl text-white align-middle"></i> 2390</span>
+                </div>
+              </div>
             </div>
-          </div>
+            )
+              })
+              }
         </div>
       </div>
     </div>
