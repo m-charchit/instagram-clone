@@ -22,11 +22,12 @@ function App() {
       <Route path='login' element={<Login/>}/>
       <Route path='profile' >
       <Route path=':username' element={<Profile/>}/>
-      <Route  path='edit' element={<ProtectedRoute/>}>
+      <Route element={<ProtectedRoute/>}>
       <Route path='edit' element={<EditProfile/>}/>
       </Route>
+      <Route path="" element={<NotFound/>}/>
       </Route>
-      <Route  path='upload' element={<ProtectedRoute/>}>
+      <Route  element={<ProtectedRoute/>}>
       <Route path='upload' element={<UploadPost/>}/>
       </Route>
       <Route path="*" element={<NotFound />} />

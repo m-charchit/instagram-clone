@@ -74,7 +74,7 @@ function Navbar() {
             <ul className="dropdown-menu z-10 shadow-md hover:block absolute right-10 hidden bg-white pt-1 w-52 peer-focus:block">
               <li className="">
                 <Link
-                  to="profile/charchit.dahiya"
+                  to="profile/charchit"
                   className="rounded-t hover:bg-gray-100 py-2 px-4 block whitespace-no-wrap"
                 >
                   <i className="fa fa-user-circle mr-2"></i> Profile

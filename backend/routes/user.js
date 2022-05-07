@@ -17,11 +17,15 @@ router.post('/getCurrentUser', FetchUser ,async (req, res) => {
     }
 })
 
-router.get("/user/:id",async(req,res)=>{
+router.post("/getUser",async(req,res)=>{
     try {
+        const {username} = req.body
+        const user = await User.findOne({username}).select("-password -_v -_id -email")
+            res.json(user)
         
     } catch (error) {
-        
+        console.log(error)
+        res.status(500).send("Internal Server Error")
     }
 })
 

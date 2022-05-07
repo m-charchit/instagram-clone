@@ -12,8 +12,18 @@ const getCurrentUser = () => {
     })
 }
 
+const getUser = (username) => {
+    return axios.post(API_URL+"getUser",{
+        username
+    })
+    .then((response)=>{
+        return response.data
+    })
+}
+
 const exportedObject = {
-    getCurrentUser
+    getCurrentUser,
+    getUser
 }
 
 export default exportedObject

@@ -15,3 +15,18 @@ export const getCurrentUser = () => (dispatch) => {
         })
     })
 }
+export const getUser = (username) => (dispatch) => {
+    return UserService.getUser(username)
+    .then((userData)=>{
+        dispatch({
+            type:"GET_USER_SUCCESS",
+            payload:{user:userData}
+        })
+        return Promise.resolve
+    })
+    .catch((error)=>{
+        dispatch({
+            type:"GET_USER_FAIL",
+        })
+    })
+}

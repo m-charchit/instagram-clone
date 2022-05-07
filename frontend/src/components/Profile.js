@@ -1,24 +1,31 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { fetchUserPosts } from "../state/Actions/post";
-import { getCurrentUser } from "../state/Actions/user";
+import { getCurrentUser, getUser } from "../state/Actions/user";
+import NotFound from "./NotFound";
 
 function Profile() {
+  const {username} = useParams()
   const dispatch = useDispatch()
   // @ts-ignore
   const { user } = useSelector((state) => state.user);
   // @ts-ignore
+  const { currentUser } = useSelector((state) => state.user);
+  const isUser = currentUser && user.username === currentUser.username
+
+  // @ts-ignore
   const { posts } = useSelector((state) => state.post)
 
   useEffect(() => {
-    
-    // @ts-ignore
     dispatch(getCurrentUser())
-    // @ts-ignore
+    dispatch(getUser(username))
     dispatch(fetchUserPosts())
-  }, [])
-  
+  }, [dispatch,username])
+  if (user === null){
+    return <NotFound/>
+  } else if (user) {
   return (
     <div className="lg:w-8/12 lg:mx-auto mb-8 mt-3 md:mt-8">
       <header className="md:w-3/12 md:ml-16">
@@ -29,21 +36,24 @@ function Profile() {
             alt=""
           />
           <div className="ml-7 md:ml-24">
-            <div className="flex mt-3 md:mt-4  relative flex-col md:flex-row">
+            <div className="flex mt-3 md:mt-4  relative flex-col md:flex-row">  
               <div className="flex">
                 <span className="text-3xl font-thin mr-2">{user && user.username}</span>
-                <i className="fas fa-ellipsis-h text-lg  md:absolute -right-4 mt-1"></i>
+                <i className={`fas fa-ellipsis-h text-lg  md:absolute -right-4 mt-1 ${isUser ? "hidden" : ""}`}></i>
               </div>
               <div className="flex space-x-3 mt-4 md:mt-0 items-center">
-                <a
+                {isUser ? <a
                   href="#?"
                   className="font-semibold text-sm py-1 md:ml-3 px-8 md:px-2 border border-gray-600 rounded text-center"
-                >
-                  Message
-                </a>
-                <button className="bg-blue-500 px-3 py-1 rounded ">
-                  <i className="fas fa-user-check"></i>
-                </button>
+                >Edit Profile</a> : <><a
+                href="#?"
+                className="font-semibold text-sm py-1 md:ml-3 px-8 md:px-2 border border-gray-600 rounded text-center"
+              >
+                Message
+              </a>
+              <button className="bg-blue-500 px-3 py-1 rounded ">
+                <i className="fas fa-user-check"></i>
+              </button></>}
               </div>
             </div>
             <div className="md:flex mt-7 hidden">
@@ -60,7 +70,7 @@ function Profile() {
           </div>
         </div>
         <div className="w-max mt-5 pl-5 md:pl-7 md:-mt-14 md:ml-64 grid gap-y-2">
-          <span className="font-semibold md:text-lg">Charchit</span>
+          <span className="font-semibold md:text-lg">{user && user.name}</span>
           {user && user.followers.length !== 1 && 
           <span className="text-sm text-gray-500">
             Followed by <a className="font-bold">{ user.followers[0]}</a>,
@@ -115,6 +125,7 @@ function Profile() {
       </div>
     </div>
   );
+            }
 }
 
 export default Profile;
