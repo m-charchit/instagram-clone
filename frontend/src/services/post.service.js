@@ -5,7 +5,7 @@ const API_URL = "http://localhost:5000/api/post/";
 
 const fetchPosts = () => {
     return axios.get(API_URL+"fetch",{
-        headers:headers
+        headers:headers()
     })
     .then((response) => {
         return response.data
@@ -14,7 +14,7 @@ const fetchPosts = () => {
 
 const fetchUserPosts = () => {
     return axios.get(API_URL+"fetchUserPosts",{
-        headers:headers
+        headers:headers()
     })
     .then((response) => {
         return response.data
@@ -26,7 +26,7 @@ const uploadPost = (caption) => {
         caption
     },
     {
-        headers:headers
+        headers:headers()
     })
     .then((response)=>{
         return response.data
@@ -38,7 +38,7 @@ const likePost = (postId) => {
         postId
     },
     {
-        headers:headers
+        headers:headers()
     })
     .then((response)=>{
         return response.data
@@ -51,7 +51,7 @@ const editPost = (caption,postId) => {
         postId
     },
     {
-        headers:headers
+        headers:headers()
     })
     .then((response)=>{
         return response.data
@@ -63,7 +63,7 @@ const deletePost = (postId) => {
         postId
     },
     {
-        headers:headers
+        headers:headers()
     })
     .then((response)=>{
         return response.data

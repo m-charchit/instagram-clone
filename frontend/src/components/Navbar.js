@@ -45,23 +45,26 @@ function Navbar() {
             <span className="text-gray-500 hidden">Search for someone</span>
           </div>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center space-x-3 md:space-x-6">
           {isLoggedIn ?
           <>
           <Link to="/">
-            <i className="fas fa-home text-2xl mx-2"></i>
+            <i className="fas fa-home text-2xl "></i>
           </Link>
           <Link to="">
-            <i className="fas fa-comment-dots text-2xl mx-2"></i>
+            <i className="fas fa-comment-dots text-2xl "></i>
+          </Link>
+          <Link to="/upload">
+            <i className="far fa-plus-square text-2xl "></i>
           </Link>
           <Link to="">
-            <i className="fas fa-compass text-2xl mx-2"></i>
+            <i className="fas fa-compass text-2xl "></i>
           </Link>
           <div className="dropdown">
             <a href="#" className="peer cursor-pointer">
               <img
                 src="/default.jpg"
-                className="mx-2 "
+                className=" "
                 alt=""
                 width="25px"
                 height="25px"

@@ -5,7 +5,7 @@ const API_URL = "http://localhost:5000/api/user/";
 
 const getCurrentUser = () => {
     return axios.post(API_URL+"getCurrentUser",{},{
-        headers:headers
+        headers:headers()
     })
     .then((response)=>{
         return response.data

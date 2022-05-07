@@ -1,5 +1,7 @@
-export const headers = {
-    'Accept': 'application/json',
+export  const headers = () => {
+    return {
+      'Accept': 'application/json',
     'Content-Type': 'application/json',
-    'auth-token':localStorage.getItem("token")
+    'auth-token': localStorage.getItem("token")
+    }
   }
