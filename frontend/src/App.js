@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Profile from './components/Profile';
 import Home from "./components/Home"
@@ -9,8 +9,15 @@ import Register from './components/Register';
 import NotFound from "./components/NotFound";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
+import { useDispatch } from 'react-redux';
+import { getCurrentUser } from './state/Actions/user';
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCurrentUser())
+  }, [dispatch])
+  
   return (
     <>
     <Navbar/>
@@ -18,8 +25,14 @@ function App() {
     <Route  element={<ProtectedRoute/>}>
             <Route index element={<Home/>}/>
           </Route>
+    <Route  element={<ProtectedRoute logRegPage={true}/>} >
+        
       <Route path='register' element={<Register/>}/>
+      </Route>
+    <Route  element={<ProtectedRoute logRegPage={true}/>}>
       <Route path='login' element={<Login/>}/>
+</Route>
+
       <Route path='profile' >
       <Route path=':username' element={<Profile/>}/>
       <Route element={<ProtectedRoute/>}>

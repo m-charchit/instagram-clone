@@ -21,9 +21,23 @@ const getUser = (username) => {
     })
 }
 
+const followActions = (userId,type) => {
+    return axios.post(API_URL+type,{
+        userId
+    },
+    {
+        headers:headers()
+    }
+    )
+    .then((response)=>{
+        return response.data
+    })
+}
+
 const exportedObject = {
     getCurrentUser,
-    getUser
+    getUser,
+    followActions
 }
 
 export default exportedObject

@@ -1,16 +1,21 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import {logout}from "../state/Actions/auth"
+import {logout} from "../state/Actions/auth"
+import { getCurrentUser } from "../state/Actions/user";
 
 function Navbar() {
   const dispatch = useDispatch()
+  // @ts-ignore
+  const { currentUser } = useSelector((state)=>state.user)
+  
   const navigate =useNavigate()
   // @ts-ignore
   const {isLoggedIn} = useSelector((state)=>state.auth)
   const handleLogout = () => {
       dispatch(logout())
+      dispatch(getCurrentUser())
       navigate("/login")
     }
   
@@ -74,7 +79,7 @@ function Navbar() {
             <ul className="dropdown-menu z-10 shadow-md hover:block absolute right-10 hidden bg-white pt-1 w-52 peer-focus:block">
               <li className="">
                 <Link
-                  to="profile/charchit"
+                  to={`profile/${currentUser && currentUser.username}`}
                   className="rounded-t hover:bg-gray-100 py-2 px-4 block whitespace-no-wrap"
                 >
                   <i className="fa fa-user-circle mr-2"></i> Profile

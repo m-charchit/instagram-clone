@@ -20,6 +20,15 @@ const user = (state={},action) => {
                 ...state,
                 user:null
             }
+        case "FOLLOW_ACTION_SUCCESS":
+            return {
+                ...state,
+                user:action.payload.user
+            }
+        case "FOLLOW_ACTION_FAIL":
+            return {
+                ...state,
+            }
         default:
             return state
     }

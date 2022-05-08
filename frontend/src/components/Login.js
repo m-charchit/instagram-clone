@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../state/Actions/auth";
+import { getCurrentUser } from "../state/Actions/user";
 
 function Login() {
   const [cred,setCred] = useState({username:"",password:""})  
@@ -12,6 +13,7 @@ function Login() {
     dispatch(login(cred.username,cred.password))
     // @ts-ignore
     .then(()=>{
+      dispatch(getCurrentUser())
       navigate("/")
     })
     .catch((error)=>{

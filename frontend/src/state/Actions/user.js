@@ -30,3 +30,19 @@ export const getUser = (username) => (dispatch) => {
         })
     })
 }
+
+export const followActions = (userId,type) => (dispatch) => {
+    return UserService.followActions(userId,type)
+    .then((userData)=>{
+        dispatch({
+            type:"FOLLOW_ACTION_SUCCESS",
+            payload:{user:userData}
+        })
+        return Promise.resolve
+    })
+    .catch((error)=>{
+        dispatch({
+            type:"FOLLOW_ACTION_SUCCESS",
+        })
+    })
+}
