@@ -34,10 +34,24 @@ const followActions = (userId,type) => {
     })
 }
 
+const checkFollow = (userId) => {
+    return axios.post(API_URL+"checkFollow",{
+        userId: userId
+    },
+    {
+        headers:headers()
+    }
+    )
+    .then((response)=>{
+        return response.data
+    })
+}
+
 const exportedObject = {
     getCurrentUser,
     getUser,
-    followActions
+    followActions,
+    checkFollow
 }
 
 export default exportedObject

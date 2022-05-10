@@ -37,13 +37,14 @@ router.post("/getUser",async(req,res)=>{
 router.post("/checkFollow",FetchUser, async (req,res)=>{
     try {
         const {userId} = req.body
+        console.log(userId)
         // @ts-ignore
         const user = await User.findOne({id:req.user.id,followings:userId})
         console.log(user)
         if (user){
-            res.json({following:true})
+            res.json({followingUser:true})
         } else {
-            res.json({following:false})
+            res.json({followingUser:false})
         }
     } catch (error) {
         console.log(error)

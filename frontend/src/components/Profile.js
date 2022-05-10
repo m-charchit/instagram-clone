@@ -1,30 +1,36 @@
+// @ts-nocheck
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { fetchUserPosts } from "../state/Actions/post";
-import { followActions, getUser } from "../state/Actions/user";
+import { checkFollow, followActions, getUser } from "../state/Actions/user";
+import Follow from "./Follow";
 import NotFound from "./NotFound";
 
 function Profile() {
   const {username} = useParams()
   const dispatch = useDispatch()
-  // @ts-ignore
   const { user } = useSelector((state) => state.user);
-  // @ts-ignore
   const { currentUser } = useSelector((state) => state.user);
   const isUser = currentUser && user && user.username === currentUser.username
 
-  // @ts-ignore
   const { posts } = useSelector((state) => state.post)
 
   useEffect(() => {
     dispatch(getUser(username))
+    .then((user)=>{
+      dispatch(checkFollow(user._id))
+    })
     dispatch(fetchUserPosts(username))
+    
   }, [dispatch,username])
 
   const followAction = (type) => {
-    dispatch(followActions(user._id,type))
+    dispatch(followActions(user._id,type)).then(()=>{
+      dispatch(checkFollow(user._id))
+    })
+    
   }
 
   
@@ -32,6 +38,8 @@ function Profile() {
     return <NotFound/>
   } else if (user) {
   return (
+    <>
+    <Follow/>
     <div className="lg:w-8/12 lg:mx-auto mb-8 mt-3 md:mt-8">
       <header className="md:w-3/12 md:ml-16">
         <div className="flex">
@@ -56,12 +64,13 @@ function Profile() {
               >
                 Message
               </a>
-              <button className="bg-blue-600 font-semibold text-white px-5 py-1 rounded " onClick={()=>followAction("follow")}>
-                Follow
-              </button>
+              {user && user.followingUser ?
               <button className="bg-blue-500 px-4 py-1 rounded" onClick={()=>followAction("unfollow")}>
                 <i className="fas fa-user-check"></i>
-              </button>
+              </button>:
+              <button className="bg-blue-600 font-semibold text-white px-5 py-1 rounded " onClick={()=>followAction("follow")}>
+                Follow
+              </button>}
               </>}
               </div>
             </div>
@@ -133,6 +142,7 @@ function Profile() {
         </div>
       </div>
     </div>
+    </>
   );
             }
 }
