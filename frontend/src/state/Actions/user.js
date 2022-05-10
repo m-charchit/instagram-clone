@@ -42,7 +42,7 @@ export const followActions = (userId,type) => (dispatch) => {
     })
     .catch((error)=>{
         dispatch({
-            type:"FOLLOW_ACTION_SUCCESS",
+            type:"FOLLOW_ACTION_FAIL",
         })
     })
 }
@@ -58,7 +58,8 @@ export const checkFollow = (userId) => (dispatch) =>{
     })
     .catch((error)=>{
         dispatch({
-            type:"FOLLOW_CHECK_SUCCESS",
+            type:"FOLLOW_CHECK_FAIL",
         })
     })
 }
+

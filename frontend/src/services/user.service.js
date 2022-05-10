@@ -46,12 +46,11 @@ const checkFollow = (userId) => {
         return response.data
     })
 }
-
 const exportedObject = {
     getCurrentUser,
     getUser,
     followActions,
-    checkFollow
+    checkFollow,
 }
 
 export default exportedObject

@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable jsx-a11y/anchor-has-content */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { fetchUserPosts } from "../state/Actions/post";
@@ -15,6 +15,8 @@ function Profile() {
   const { currentUser } = useSelector((state) => state.user);
   const isUser = currentUser && user && user.username === currentUser.username
 
+  const [showFollowerElem, setShowFollowerElem] = useState(false)
+  const [showFollowingElem, setShowFollowingElem] = useState(false)
   const { posts } = useSelector((state) => state.post)
 
   useEffect(() => {
@@ -33,14 +35,22 @@ function Profile() {
     
   }
 
+  const showFollowers = () => {
+    setShowFollowerElem(true)
+  }
+  const showFollowings = () => {
+    setShowFollowingElem(true)
+  }
   
   if (user === null){
     return <NotFound/>
   } else if (user) {
   return (
     <>
-    <Follow/>
-    <div className="lg:w-8/12 lg:mx-auto mb-8 mt-3 md:mt-8">
+    
+    { showFollowerElem && <Follow title="Followers" hideElem={setShowFollowerElem} data={user&& user.followers}/>}
+    {showFollowingElem && <Follow title="Followings" hideElem={setShowFollowingElem} data={user&& user.followings}/>}
+    <div className="lg:w-8/12 lg:mx-auto mb-8 mt-3 md:mt-8 ">
       <header className="md:w-3/12 md:ml-16">
         <div className="flex">
           <img
@@ -78,18 +88,18 @@ function Profile() {
               <span className="mr-7 flex">
                 <b className="font-semibold mr-1">{posts && posts.length}</b> posts
               </span>
-              <span className="mr-7 flex">
-                <b className="font-semibold mr-1">{ user && user.followersCount}</b> followers
+              <span className="mr-7 flex" onClick={showFollowers}>
+                <b className="font-semibold mr-1">{ user && user.followers.length}</b> followers
               </span>
-              <span className="flex">
-                <b className="font-semibold mr-1">{user && user.followingsCount}</b> following
+              <span className="flex" onClick={showFollowings}>
+                <b className="font-semibold mr-1">{user && user.followings.length}</b> following
               </span>
             </div>
           </div>
         </div>
         <div className="w-max mt-5 pl-5 md:pl-7 md:-mt-14 md:ml-64 grid gap-y-2">
           <span className="font-semibold md:text-lg">{user && user.name}</span>
-          {user && user.followersCount !== 1 && 
+          {user && user.followers.length !== 1 && 
           <span className="text-sm text-gray-500">
             Followed by <a className="font-bold"></a>,
             <a className="font-bold"></a> + more
@@ -101,12 +111,12 @@ function Profile() {
             <b className="font-semibold">{posts && posts.length}</b>
             <br /> posts
           </span>
-          <span className="text-gray-600 w-1/3">
-            <b className="font-semibold">{user && user.followersCount}</b>
+          <span className="text-gray-600 w-1/3" onClick={showFollowers}>
+            <b className="font-semibold">{user && user.followers.length}</b>
             <br /> followers
           </span>
-          <span className="text-gray-600 w-1/3">
-            <b className="font-semibold ">{user && user.followingsCount}</b> <br /> following
+          <span className="text-gray-600 w-1/3" onClick={showFollowings}>
+            <b className="font-semibold ">{user && user.followings.length}</b> <br /> following
           </span>
         </div>
       </header>
