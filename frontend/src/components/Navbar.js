@@ -66,7 +66,7 @@ function Navbar() {
             <i className="fas fa-compass text-2xl "></i>
           </Link>
           <div className="dropdown">
-            <a href="#" className="peer cursor-pointer">
+            <button className="peer cursor-pointer align-middle">
               <img
                 src="/default.jpg"
                 className=" "
@@ -74,7 +74,7 @@ function Navbar() {
                 width="25px"
                 height="25px"
               />
-            </a>
+            </button>
 
             <ul className="dropdown-menu z-10 shadow-md hover:block absolute right-10 hidden bg-white pt-1 w-52 peer-focus:block">
               <li className="">

@@ -69,9 +69,12 @@ router.post("/account/edit",FetchUser,async(req,res)=>{
 router.post("/follow",FetchUser,async (req,res)=>{
     try {
         const {userId} = req.body
+        // @ts-ignore
         if (userId!=req.user.id){
         // @ts-ignore
         const userToFollow = await User.findByIdAndUpdate(userId,{$addToSet:{followers:req.user.id}},{new:true})
+        .populate("followers","_id username name").populate("followings","_id username name")
+        .select("-password -__v -email -date")
         // @ts-ignore
         const followingUser = await User.findByIdAndUpdate(req.user.id,{$addToSet:{followings:userId}})
         res.json(userToFollow)
@@ -89,7 +92,10 @@ router.post("/unfollow",FetchUser,async (req,res)=>{
         const {userId} = req.body
         // @ts-ignore
         if(userId != req.user.id){
+            // @ts-ignore
         const userToUnfollow = await User.findByIdAndUpdate(userId,{$pull:{followers:req.user.id}},{new:true})
+        .populate("followers","_id username name").populate("followings","_id username name")
+        .select("-password -__v -email -date")
         // @ts-ignore
         const followingUser = await User.findByIdAndUpdate(req.user.id,{$pull:{followings:userId}})
         res.json(userToUnfollow)

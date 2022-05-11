@@ -48,8 +48,8 @@ function Profile() {
   return (
     <>
     
-    { showFollowerElem && <Follow title="Followers" hideElem={setShowFollowerElem} data={user&& user.followers}/>}
-    {showFollowingElem && <Follow title="Followings" hideElem={setShowFollowingElem} data={user&& user.followings}/>}
+    {showFollowerElem && user.followers.length !== 0 && <Follow title="Followers" hideElem={setShowFollowerElem} data={user&& user.followers}/>}
+    {showFollowingElem && user.followings.length !== 0 && <Follow title="Followings" hideElem={setShowFollowingElem} data={user&& user.followings}/>}
     <div className="lg:w-8/12 lg:mx-auto mb-8 mt-3 md:mt-8 ">
       <header className="md:w-3/12 md:ml-16">
         <div className="flex">
@@ -140,7 +140,7 @@ function Profile() {
                   className="w-full h-full object-cover absolute group-hover:brightness-75"
                   alt=""
                   />
-                <div className="w-full h-full absolute flex justify-center items-center space-x-7">
+                <div className="w-full h-full absolute  justify-center items-center space-x-7 hidden md:flex">
                   <span className="font-semibold text-white"><i className="fas fa-heart text-xl text-white align-middle"></i> {post.like.length}</span>
                   <span className="font-semibold text-white"><i className="fas fa-comment text-xl text-white align-middle"></i> 2390</span>
                 </div>

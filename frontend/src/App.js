@@ -7,10 +7,11 @@ import EditProfile from './components/EditProfile';
 import Login from './components/Login';
 import Register from './components/Register';
 import NotFound from "./components/NotFound";
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import { useDispatch } from 'react-redux';
 import { getCurrentUser } from './state/Actions/user';
+import CustomSwitch from './components/CustomSwitch';
 
 function App() {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ function App() {
   return (
     <>
     <Navbar/>
-    <Routes>
+    <CustomSwitch>
     <Route  element={<ProtectedRoute/>}>
             <Route index element={<Home/>}/>
           </Route>
@@ -44,8 +45,7 @@ function App() {
       <Route path='upload' element={<UploadPost/>}/>
       </Route>
       <Route path="*" element={<NotFound />} />
-      
-    </Routes>
+      </CustomSwitch>      
     </>
   );
 }
