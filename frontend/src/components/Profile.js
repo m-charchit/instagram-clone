@@ -23,14 +23,15 @@ function Profile() {
     dispatch(getUser(username))
     .then((user)=>{
       dispatch(checkFollow(user._id))
+      dispatch(fetchUserPosts(user._id))
     })
-    dispatch(fetchUserPosts(username))
+    
     
   }, [dispatch,username])
 
-  const followAction = (type) => {
-    dispatch(followActions(user._id,type)).then(()=>{
-      dispatch(checkFollow(user._id))
+  const followAction = (type,userId=user._id) => {
+    dispatch(followActions(userId,type)).then(()=>{
+      dispatch(checkFollow(userId))
     })
     
   }
@@ -48,8 +49,8 @@ function Profile() {
   return (
     <>
     
-    {showFollowerElem && user.followers.length !== 0 && <Follow title="Followers" hideElem={setShowFollowerElem} data={user&& user.followers}/>}
-    {showFollowingElem && user.followings.length !== 0 && <Follow title="Followings" hideElem={setShowFollowingElem} data={user&& user.followings}/>}
+    {showFollowerElem && user.followers.length !== 0 && <Follow title="Followers" hideElem={setShowFollowerElem} data={user&& user.followers} data2={user&& user.followings} followAction={followAction} crUsername={currentUser.username}/>}
+    {showFollowingElem && user.followings.length !== 0 && <Follow title="Followings" hideElem={setShowFollowingElem} data={user&& user.followings} data2={user&& user.followers} followAction={followAction} crUsername={currentUser.username}/>}
     <div className="lg:w-8/12 lg:mx-auto mb-8 mt-3 md:mt-8 ">
       <header className="md:w-3/12 md:ml-16">
         <div className="flex">
@@ -99,12 +100,12 @@ function Profile() {
         </div>
         <div className="w-max mt-5 pl-5 md:pl-7 md:-mt-14 md:ml-64 grid gap-y-2">
           <span className="font-semibold md:text-lg">{user && user.name}</span>
-          {user && user.followers.length !== 1 && 
+          {/* {user && user.followers.length !== 1 && 
           <span className="text-sm text-gray-500">
             Followed by <a className="font-bold"></a>,
             <a className="font-bold"></a> + more
           </span>
-          }
+          } */}
         </div>
         <div className="md:hidden mt-7 flex justify-around text-sm text-center border-t py-3">
           <span className="text-gray-600 w-1/3 ">

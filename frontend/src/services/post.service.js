@@ -12,8 +12,8 @@ const fetchPosts = () => {
     })
 }
 
-const fetchUserPosts = (username) => {
-    return axios.post(API_URL+"fetchUserPosts",{username})
+const fetchUserPosts = (userId) => {
+    return axios.post(API_URL+"fetchUserPosts",{userId})
     .then((response) => {
         return response.data
     })

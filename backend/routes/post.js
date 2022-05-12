@@ -17,9 +17,9 @@ router.get("/fetch", FetchUser ,  async (req, res) => {
 
 router.post("/fetchUserPosts",async (req,res) => {
   try {
-    const {username} = req.body
+    const {userId} = req.body
     // @ts-ignore
-    const posts = await Post.find({username});
+    const posts = await Post.find({user:userId});
     res.json(posts)
   } catch (error) {
     console.log(error);

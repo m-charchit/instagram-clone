@@ -18,8 +18,8 @@ export const fetchPosts = () => (dispatch) => {
     )
 }
 
-export const fetchUserPosts = (username) => (dispatch) => {
-    return PostService.fetchUserPosts(username).then(
+export const fetchUserPosts = (userId) => (dispatch) => {
+    return PostService.fetchUserPosts(userId).then(
         (data)=>{
             dispatch({
                 type:"FETCH_USER_POSTS",

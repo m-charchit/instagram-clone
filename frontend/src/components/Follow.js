@@ -1,8 +1,34 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function Follow(props) {
 
-  const {title,hideElem,data} = props
+  const {title,hideElem,data,followAction,data2,crUsername} = props
+
+  const renderBtn = (item) => {
+    let ifUserFollow = data2.map((e)=>JSON.stringify(e)).includes(JSON.stringify(item))
+    console.log(item.username,crUsername)
+    if (item.username !== crUsername){
+    if (ifUserFollow) {
+      return (
+        <button className="outline-none text-white text-sm font-semibold  bg-blue-500  px-2 py-1 rounded-sm my-3 lg:my-0" onClick={()=>followAction("unfollow",item._id)}>
+              Following
+            </button>
+      )
+    } else{
+      return (<button className="outline-none text-white text-sm font-semibold  bg-blue-500  px-2 py-1 rounded-sm my-3 lg:my-0" onClick={()=>followAction("follow",item._id)}>
+      Follow
+    </button>)
+    }
+  } else {
+    return (
+      (<Link to={`/profile/${crUsername}`} className="outline-none text-white text-sm font-semibold  bg-blue-500  px-2 py-1 rounded-sm my-3 lg:my-0" >
+      Profile
+    </Link>)
+    )
+  }
+  }
+  
   return (
     <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-30 backdrop-brightness-50'>
         <div className="bg-white border rounded-xl w-96 h-96 overflow-auto animate-[pulse_1s_ease-in-out_1]">
@@ -16,12 +42,10 @@ function Follow(props) {
                 <div className="flex space-x-3 items-center">
                 <img src="/default.jpg" alt="" className="w-9 h-9 rounded-full"/>
               <div className="w-full mx-10 lg:mx-0 mt-1 lg:mt-0">
-                <p className="font-semibold">{item.username}</p>
+                <Link to={`/profile/${item.username}`} className="font-semibold">{item.username}</Link>
                 <p className="text-sm text-slate-500">{item.name}</p>
               </div>
-              <button className="outline-none text-white text-sm font-semibold  bg-blue-500  px-2 py-1 rounded-sm my-3 lg:my-0">
-              Profile
-            </button>
+              {renderBtn(item)}
                 </div>
             </div>)
             })}
