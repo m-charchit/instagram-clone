@@ -29,9 +29,9 @@ function Profile() {
     
   }, [dispatch,username])
 
-  const followAction = (type,userId=user._id) => {
-    dispatch(followActions(userId,type)).then(()=>{
-      dispatch(checkFollow(userId))
+  const followAction = (type ,userId=user._id) => {
+    dispatch(followActions(userId,type,user._id)).then(()=>{
+      dispatch(checkFollow(user._id))
     })
     
   }
@@ -40,17 +40,16 @@ function Profile() {
     setShowFollowerElem(true)
   }
   const showFollowings = () => {
-    setShowFollowingElem(true)
+    setShowFollowingElem(user.followings.length !== 0)
   }
   
   if (user === null){
     return <NotFound/>
   } else if (user) {
   return (
-    <>
-    
-    {showFollowerElem && user.followers.length !== 0 && <Follow title="Followers" hideElem={setShowFollowerElem} data={user&& user.followers} data2={user&& user.followings} followAction={followAction} crUsername={currentUser.username}/>}
-    {showFollowingElem && user.followings.length !== 0 && <Follow title="Followings" hideElem={setShowFollowingElem} data={user&& user.followings} data2={user&& user.followers} followAction={followAction} crUsername={currentUser.username}/>}
+    <>    
+    {showFollowerElem && user.followers.length !== 0 && <Follow title="Followers" hideElem={setShowFollowerElem} data={user&& user.followers} data2={user&& currentUser.followings} followAction={followAction} crUsername={currentUser.username}/>}
+    {showFollowingElem && user.followings.length !== 0 && <Follow title="Followings" hideElem={setShowFollowingElem} data={user&& user.followings} data2={user&& currentUser.followings} followAction={followAction} crUsername={currentUser.username}/>}
     <div className="lg:w-8/12 lg:mx-auto mb-8 mt-3 md:mt-8 ">
       <header className="md:w-3/12 md:ml-16">
         <div className="flex">

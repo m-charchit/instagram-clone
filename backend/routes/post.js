@@ -44,7 +44,7 @@ router.post("/like", FetchUser, async (req, res) => {
   try {
     const { postId } = req.body;
     // @ts-ignore
-    const findPost = await Post.findOne({id:postId,like:req.user.id})
+    const findPost = await Post.findById(postId).findOne({like:req.user.id})
     if(findPost){
       // @ts-ignore
       const likedPost = await Post.findByIdAndUpdate(postId,{$pull:{like:req.user.id}},{new:true})

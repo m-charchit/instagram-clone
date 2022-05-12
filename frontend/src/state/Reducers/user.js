@@ -23,7 +23,8 @@ const user = (state={},action) => {
         case "FOLLOW_ACTION_SUCCESS":
             return {
                 ...state,
-                user:{...state.user,...action.payload.user}
+                currentUser:action.payload.followingUser,
+                user:action.payload.user
             }
         case "FOLLOW_ACTION_FAIL":
             return {

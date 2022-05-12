@@ -8,8 +8,9 @@ router.post('/getCurrentUser', FetchUser ,async (req, res) => {
 
     try {
         // @ts-ignore
-        const user = await User.findById(req.user.id).select("-password -_v -date")
-        
+        const user = await User.findById(req.user.id)
+        .populate("followers","_id username name").populate("followings","_id username name")
+        .select("-password -_v -date")
         res.json(user)
     } catch (error) {
         console.log(error)
@@ -20,7 +21,9 @@ router.post('/getCurrentUser', FetchUser ,async (req, res) => {
 router.post("/getUser",async(req,res)=>{
     try {
         const {username} = req.body
-        const user = await User.findOne({username}).populate("followers","_id username name").populate("followings","_id username name").select("-password -__v -email -date")
+        const user = await User.findOne({username})
+        .populate("followers","_id username name").populate("followings","_id username name")
+        .select("-password -__v -email -date")
         res.json(user)
 
         
@@ -33,9 +36,8 @@ router.post("/getUser",async(req,res)=>{
 router.post("/checkFollow",FetchUser, async (req,res)=>{
     try {
         const {userId} = req.body
-        console.log(userId)
         // @ts-ignore
-        const user = await User.findOne({id:req.user.id,followings:userId})
+        const user = await User.findOne({_id:req.user.id,followings:userId})
         console.log(user)
         if (user){
             res.json({followingUser:true})
@@ -68,16 +70,22 @@ router.post("/account/edit",FetchUser,async(req,res)=>{
 
 router.post("/follow",FetchUser,async (req,res)=>{
     try {
-        const {userId} = req.body
+        const {userId,pUserId} = req.body
         // @ts-ignore
         if (userId!=req.user.id){
         // @ts-ignore
-        const userToFollow = await User.findByIdAndUpdate(userId,{$addToSet:{followers:req.user.id}},{new:true})
+        const followedUser = await User.findByIdAndUpdate(userId,{$addToSet:{followers:req.user.id}})
+        
+        // @ts-ignore
+        const followingUser = await User.findByIdAndUpdate(req.user.id,{$addToSet:{followings:userId}},{new:true})
+        .populate("followers","_id username name").populate("followings","_id username name")
+        .select("-password -_v -date")
+
+        const user = await User.findById(pUserId)
         .populate("followers","_id username name").populate("followings","_id username name")
         .select("-password -__v -email -date")
-        // @ts-ignore
-        const followingUser = await User.findByIdAndUpdate(req.user.id,{$addToSet:{followings:userId}})
-        res.json(userToFollow)
+
+        res.json({followingUser,user})
     }   else {
         res.status(401).send("Not Allowed")
     }
@@ -89,16 +97,20 @@ router.post("/follow",FetchUser,async (req,res)=>{
 
 router.post("/unfollow",FetchUser,async (req,res)=>{
     try {
-        const {userId} = req.body
+        const {userId,pUserId} = req.body
         // @ts-ignore
         if(userId != req.user.id){
             // @ts-ignore
-        const userToUnfollow = await User.findByIdAndUpdate(userId,{$pull:{followers:req.user.id}},{new:true})
+        const followedUser = await User.findByIdAndUpdate(userId,{$pull:{followers:req.user.id}})
+        
+        // @ts-ignore
+        const followingUser = await User.findByIdAndUpdate(req.user.id,{$pull:{followings:userId}},{new:true})
+        .populate("followers","_id username name").populate("followings","_id username name")
+        .select("-password -_v -date")
+        const user = await User.findById(pUserId)
         .populate("followers","_id username name").populate("followings","_id username name")
         .select("-password -__v -email -date")
-        // @ts-ignore
-        const followingUser = await User.findByIdAndUpdate(req.user.id,{$pull:{followings:userId}})
-        res.json(userToUnfollow)
+        res.json({followingUser,user})
     } else {
         res.status(401).send("Not Allowed")
     }

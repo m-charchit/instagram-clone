@@ -7,6 +7,7 @@ function Follow(props) {
 
   const renderBtn = (item) => {
     let ifUserFollow = data2.map((e)=>JSON.stringify(e)).includes(JSON.stringify(item))
+    console.log(ifUserFollow)
     console.log(item.username,crUsername)
     if (item.username !== crUsername){
     if (ifUserFollow) {

@@ -21,9 +21,10 @@ const getUser = (username) => {
     })
 }
 
-const followActions = (userId,type) => {
+const followActions = (userId,type,pUserId) => {
     return axios.post(API_URL+type,{
-        userId
+        userId,
+        pUserId
     },
     {
         headers:headers()

@@ -31,12 +31,12 @@ export const getUser = (username) => (dispatch) => {
     })
 }
 
-export const followActions = (userId,type) => (dispatch) => {
-    return UserService.followActions(userId,type)
-    .then((userData)=>{
+export const followActions = (userId,type,pUserId) => (dispatch) => {
+    return UserService.followActions(userId,type,pUserId)
+    .then((data)=>{
         dispatch({
             type:"FOLLOW_ACTION_SUCCESS",
-            payload:{user:userData}
+            payload:data
         })
         return Promise.resolve
     })
