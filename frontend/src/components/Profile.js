@@ -25,8 +25,8 @@ function Profile() {
       dispatch(checkFollow(user._id))
       dispatch(fetchUserPosts(user._id))
     })
-    
-    
+    setShowFollowerElem(false)
+    setShowFollowingElem(false)
   }, [dispatch,username])
 
   const followAction = (type ,userId=user._id) => {
@@ -40,7 +40,7 @@ function Profile() {
     setShowFollowerElem(true)
   }
   const showFollowings = () => {
-    setShowFollowingElem(user.followings.length !== 0)
+    setShowFollowingElem(true)
   }
   
   if (user === null){
@@ -88,10 +88,10 @@ function Profile() {
               <span className="mr-7 flex">
                 <b className="font-semibold mr-1">{posts && posts.length}</b> posts
               </span>
-              <span className="mr-7 flex" onClick={showFollowers}>
+              <span className="mr-7 flex cursor-pointer" onClick={showFollowers}>
                 <b className="font-semibold mr-1">{ user && user.followers.length}</b> followers
               </span>
-              <span className="flex" onClick={showFollowings}>
+              <span className="flex cursor-pointer" onClick={showFollowings}>
                 <b className="font-semibold mr-1">{user && user.followings.length}</b> following
               </span>
             </div>

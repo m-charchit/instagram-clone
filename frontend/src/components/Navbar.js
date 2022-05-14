@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useCallback, useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {logout} from "../state/Actions/auth"
@@ -76,7 +76,7 @@ function Navbar() {
               />
             </button>
 
-            <ul className="dropdown-menu z-10 shadow-md hover:block absolute right-10 hidden bg-white pt-1 w-52 peer-focus:block">
+            <ul className="dropdown-menu z-10 shadow-md hover:visible absolute right-10 invisible opacity-0 bg-white pt-1 w-52  peer-focus:visible peer-focus:opacity-100 transition-opacity duration-700">
               <li className="">
                 <Link
                   to={`profile/${currentUser && currentUser.username}`}

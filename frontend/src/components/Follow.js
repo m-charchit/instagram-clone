@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import LoadingBar from 'react-topbar-progress-indicator'
 
 function Follow(props) {
-
   const {title,hideElem,data,followAction,data2,crUsername} = props
+  const [progress, setProgress] = useState(true)
+
+  useEffect(()=>{
+    setProgress(false)
+  },[])
 
   const renderBtn = (item) => {
     let ifUserFollow = data2.map((e)=>JSON.stringify(e)).includes(JSON.stringify(item))
-    console.log(ifUserFollow)
-    console.log(item.username,crUsername)
     if (item.username !== crUsername){
     if (ifUserFollow) {
       return (
@@ -32,7 +35,8 @@ function Follow(props) {
   
   return (
     <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-30 backdrop-brightness-50'>
-        <div className="bg-white border rounded-xl w-96 h-96 overflow-auto animate-[pulse_1s_ease-in-out_1]">
+      { progress && <LoadingBar/>}
+        <div className="bg-white border rounded-xl w-96 h-96 overflow-auto  animate-showModal ">
             <div className='relative my-2 font-semibold flex justify-center items-center'>
                 <p className='w-full text-center '>{title}</p>
                 <i className="absolute right-2 fas fa-times text-3xl float-right cursor-pointer" onClick={()=>hideElem(false)}></i>

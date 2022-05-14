@@ -1,6 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import Post from "./Post";
+import PostPreview from "./PostPreview";
 import ProfileCard from "./ProfileCard";
 
 function Home() {
@@ -55,7 +54,7 @@ function Home() {
             </div>
       </div>
       <div className="flex flex-col space-y-6 lg:w-2/3 lg:-mt-72">
-        <Post/>
+        <PostPreview/>
       </div>
       
     </div>
