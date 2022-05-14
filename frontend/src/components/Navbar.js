@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {logout} from "../state/Actions/auth"
@@ -9,7 +10,8 @@ function Navbar() {
   const dispatch = useDispatch()
   // @ts-ignore
   const { currentUser } = useSelector((state)=>state.user)
-  
+  const [userList, SetuserList] = useState([])
+  const [progress, setProgress] = useState(false)
   const navigate =useNavigate()
   // @ts-ignore
   const {isLoggedIn} = useSelector((state)=>state.auth)
@@ -19,34 +21,62 @@ function Navbar() {
       navigate("/login")
     }
   
+    const handleInput = (e) => {
+      console.log(e.target.value)
+      if(e.target.value!==""){
+        setProgress(true)
+        axios.post("http://localhost:5000/api/user/searchUser",{search:e.target.value})
+        .then((response)=>{
+            setProgress(false)
+            SetuserList(response.data)
+            console.log(response.data)
+        })
+        .catch((error)=>{
+          setProgress(false)
+          alert("error")
+        })
+      } else {
+        SetuserList([])
+      }
+    }
+
   return (
     <nav className="border-b px-4 py-3 bg-white">
       <div className="flex items-center md:justify-evenly justify-between">
-        <img src="/igNavbarLogo.png" alt="" />
+        <Link to={"/"}><img src="/igNavbarLogo.png" alt="" /></Link>
         <div className="relative hidden md:block">
           <input
             type="text"
             className="bg-gray-100 outline-none px-9 py-1 rounded-md peer"
             placeholder="Search"
+            onChange={handleInput}
           />
           <i
             className="fa fa-search text-gray-400 absolute left-0 pt-2 pl-3"
             aria-hidden="true"
           ></i>
 
-          <div className="absolute z-20 w-80 h-80 py-2 hidden justify-center peer-focus:flex bg-white shadow-md top-11 rounded-md border border-gray-300">
+          <div className="absolute z-20 w-80 h-80 py-2 flex invisible opacity-0 justify-center hover:visible peer-focus:visible peer-focus:opacity-100 bg-white shadow-md top-11 rounded-md border border-gray-300 transition-opacity duration-500">
             <div className="w-9 overflow-hidden inline-block absolute -top-4">
               <div className=" h-4 w-4 bg-white rotate-45 transform origin-bottom-left border-gray-300 border"></div>
             </div>
             <div className="w-full flex-col flex overflow-auto overflow-x-hidden whitespace-nowrap">
+            {progress ?  <p className="m-auto">Loading..</p> : 
+            userList.length !== 0 ? userList.map((user)=>{
+              return (
+                  <Link to={`/profile/${user.username}`} key={user._id}>
               <div className="flex px-3 py-2 space-x-3 hover:bg-gray-100 cursor-pointer ">
               <img src="/default.jpg" alt="" className="w-12 h-12 rounded-full"/>
               <div>
-                <p className="font-semibold">makemytrip</p>
-                <p className="text-sm text-slate-500">Make My  trips</p>
+                <p className="font-semibold">{user.username}</p>
+                <p className="text-sm text-slate-500">{user.name}</p>
               </div>
               </div>
-            </div>
+            </Link>
+              )
+            }) : <p className="m-auto">No Results</p> 
+          }
+          </div>
             <span className="text-gray-500 hidden">Search for someone</span>
           </div>
         </div>

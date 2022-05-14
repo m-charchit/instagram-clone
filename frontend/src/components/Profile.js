@@ -134,6 +134,7 @@ function Profile() {
           {posts && posts.map((post) => {
             return (
               <div className="w-1/3 p-px md:px-3 md:pb-6 group cursor-pointer" key={post._id}>
+                <Link to={`/post/${post._id}`}>
               <div className="relative pb-full" style={{ paddingBottom: "100%" }}>
                 <img
                   src="https://images.unsplash.com/photo-1502791451862-7bd8c1df43a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
@@ -145,6 +146,7 @@ function Profile() {
                   <span className="font-semibold text-white"><i className="fas fa-comment text-xl text-white align-middle"></i> 2390</span>
                 </div>
               </div>
+            </Link>
             </div>
             )
               })

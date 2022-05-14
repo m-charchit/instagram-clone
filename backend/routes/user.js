@@ -51,12 +51,15 @@ router.post("/checkFollow",FetchUser, async (req,res)=>{
     }
 })
 
-
-router.get("/account/edit",FetchUser,async(req,res)=>{
+router.post("/searchUser", async (req,res)=>{
     try {
+        const {search} = req.body
+        const users = await User.find({username:new RegExp(search,"i")}).select("_id username name")
+        res.json(users)
 
     } catch (error) {
-        
+        console.log(error)
+        res.status(500).send("Internal Server Error")
     }
 })
 
