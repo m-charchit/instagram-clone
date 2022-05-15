@@ -1,8 +1,18 @@
-import React from "react";
+// @ts-nocheck
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts } from "../state/Actions/post";
 import PostPreview from "./PostPreview";
 import ProfileCard from "./ProfileCard";
 
 function Home() {
+  const dispatch = useDispatch()
+  const {posts} = useSelector((state) => state.post)
+  // const {currentUser} = useSelector((state) => state.user)
+  useEffect(() => {
+    dispatch(fetchPosts())
+  }, [])
+  
   return (
     <div className="md:container mx-auto xl:px-44 lg:px-20  ">
       <div className="flex flex-col lg:flex-row ">
@@ -54,7 +64,10 @@ function Home() {
             </div>
       </div>
       <div className="flex flex-col space-y-6 lg:w-2/3 lg:-mt-72">
-        <PostPreview/>
+      {posts && posts.map((post)=>{
+        return <PostPreview post={post}/>
+      })
+      }
       </div>
       
     </div>

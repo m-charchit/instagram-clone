@@ -1,6 +1,6 @@
 import React from 'react'
 
-function PostPreview() {
+function PostPreview({post}) {
   return (
     <div className="bg-white border">
           <div className="flex py-5 px-4 ">
@@ -26,7 +26,7 @@ function PostPreview() {
               <a className="font-semibold">73 others</a>
             </p>
             <p className="text-gray-600">
-              <b>charchit.dahiya</b> "Nothing but nothing"
+              <b>charchit.dahiya</b> {post.caption}
             </p>
             <button className="outline-none text-gray-500 text-left text-sm w-fit active:text-gray-300 ">
               View all 4 comments
