@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { fetchUserPosts } from "../state/Actions/post";
 import { checkFollow, followActions, getUser } from "../state/Actions/user";
-import Follow from "./Follow";
+import UserDialog from "./UsersDialog";
 import NotFound from "./NotFound";
 
 function Profile() {
@@ -48,8 +48,8 @@ function Profile() {
   } else if (user) {
   return (
     <>    
-    {showFollowerElem && user.followers.length !== 0 && <Follow title="Followers" hideElem={setShowFollowerElem} data={user&& user.followers} data2={user&& currentUser.followings} followAction={followAction} crUsername={currentUser.username}/>}
-    {showFollowingElem && user.followings.length !== 0 && <Follow title="Followings" hideElem={setShowFollowingElem} data={user&& user.followings} data2={user&& currentUser.followings} followAction={followAction} crUsername={currentUser.username}/>}
+    {showFollowerElem && user.followers.length !== 0 && <UserDialog title="Followers" hideElem={setShowFollowerElem} data={user&& user.followers} data2={currentUser&& currentUser.followings} followAction={followAction} crUsername={currentUser.username}/>}
+    {showFollowingElem && user.followings.length !== 0 && <UserDialog title="Followings" hideElem={setShowFollowingElem} data={user&& user.followings} data2={currentUser&& currentUser.followings} followAction={followAction} crUsername={currentUser.username}/>}
     <div className="lg:w-8/12 lg:mx-auto mb-8 mt-3 md:mt-8 ">
       <header className="md:w-3/12 md:ml-16">
         <div className="flex">

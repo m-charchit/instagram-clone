@@ -4,7 +4,7 @@ const FetchUser = require("../middleware/FetchUser");
 const Post = require('../models/Post');
 const Comment = require("../models/Comment")
 
-router.post("/fetchComments", async(req,res)=>{
+router.post("/fetchComments", FetchUser ,async(req,res)=>{
     try {
         const {postId} = req.body
         const comments = await Comment.find({post:postId})
@@ -61,6 +61,7 @@ router.post("/delete", FetchUser , async (req,res)=>{
         const a = await getId([await Comment.findOne({_id:commentId,user:req.user.id})],[])
         // @ts-ignore
         await Comment.deleteMany({_id:{$in:a}})
+        
         res.json(a)
     } catch (error) {
         console.log(error);

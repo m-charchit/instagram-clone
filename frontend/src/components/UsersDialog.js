@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import LoadingBar from 'react-topbar-progress-indicator'
 
-function Follow(props) {
+function UserDialog(props) {
   const {title,hideElem,data,followAction,data2,crUsername} = props
   const [progress, setProgress] = useState(true)
 
@@ -59,4 +59,4 @@ function Follow(props) {
   )
 }
 
-export default Follow
+export default UserDialog
