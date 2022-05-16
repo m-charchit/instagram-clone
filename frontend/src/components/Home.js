@@ -11,7 +11,8 @@ function Home() {
   // const {currentUser} = useSelector((state) => state.user)
   useEffect(() => {
     dispatch(fetchPosts())
-  }, [])
+
+  }, [dispatch])
   
   return (
     <div className="md:container mx-auto xl:px-44 lg:px-20  ">
@@ -65,7 +66,7 @@ function Home() {
       </div>
       <div className="flex flex-col space-y-6 lg:w-2/3 lg:-mt-72">
       {posts && posts.map((post)=>{
-        return <PostPreview post={post}/>
+        return <PostPreview post={post} key={post._id}/>
       })
       }
       </div>

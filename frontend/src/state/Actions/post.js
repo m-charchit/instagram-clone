@@ -53,3 +53,22 @@ export const uploadPost = (caption) => (dispatch) => {
         }
     )
 }
+
+export const likePost = (postId) => (dispatch) => {
+    return PostService.likePost(postId).then(
+        (data)=>{
+            console.log(data)
+            dispatch({
+                type:"LIKE_POST_SUCCESS",
+                payload:{post: data }
+            })
+            return Promise.resolve
+        },
+        (error)=>{
+            dispatch({
+                type:"LIKE_POST_FAIL"
+            })
+            return Promise.reject
+        }
+    )
+}

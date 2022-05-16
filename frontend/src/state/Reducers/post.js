@@ -12,9 +12,16 @@ const post = (state={},action) => {
                 posts: action.payload.posts
             }
         case "UPLOAD_POST_SUCCESS" :
+            state.posts[state.posts.findIndex(({_id})=>_id === action.payload.post._id)] = action.payload.post
             return {
                 ...state,
-                posts: {...state, ...action.payload.post}
+                posts: state.posts
+            }
+        case "LIKE_POST_SUCCESS" : 
+            state.posts[state.posts.findIndex(({_id})=>_id === action.payload.post._id)] = action.payload.post
+            return {
+                ...state,
+                posts:state.posts
             }
         
         default:

@@ -7,7 +7,8 @@ const Post = require("../models/Post");
 router.get("/fetch", FetchUser ,  async (req, res) => {
   try {
     // @ts-ignore
-    const posts = await Post.find({user:{$in:req.user.followings}});
+    const posts = await Post.find({user:{$in:req.user.followings}})
+    .populate("user","_id username").select("-_v")
     res.json(posts)
   } catch (error) {
     console.log(error);
@@ -48,6 +49,7 @@ router.post("/like", FetchUser, async (req, res) => {
     if(findPost){
       // @ts-ignore
       const likedPost = await Post.findByIdAndUpdate(postId,{$pull:{like:req.user.id}},{new:true})
+      .populate("user","_id username").select("-__v")
     res.json(likedPost);
 
     }
@@ -57,7 +59,7 @@ router.post("/like", FetchUser, async (req, res) => {
       // @ts-ignore
       { $addToSet: { like: req.user.id } },
       { new: true }
-    );
+    ).populate("user","_id username").select("-__v");
     res.json(likedPost);
     }
     
