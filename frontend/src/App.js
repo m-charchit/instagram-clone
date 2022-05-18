@@ -45,7 +45,7 @@ function App() {
         </Route>
         {/* <Route element={<ProtectedRoute />}> */}
           <Route path="post">
-          <Route path=":userId" element={<Post />} />
+          <Route path=":postId" element={<Post />} />
           <Route path="" element={<NotFound />} />
           </Route>
         {/* </Route> */}

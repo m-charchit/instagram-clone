@@ -12,6 +12,15 @@ const fetchPosts = () => {
     })
 }
 
+const fetchPost = (postId) => {
+    return axios.post(API_URL+"fetchPost",{postId},{
+        headers:headers()
+    })
+    .then((response) => {
+        return response.data
+    })
+}
+
 const fetchUserPosts = (userId) => {
     return axios.post(API_URL+"fetchUserPosts",{userId})
     .then((response) => {
@@ -68,11 +77,24 @@ const deletePost = (postId) => {
     })
 }
 
-export default {
+const addComment = (com,postId,parentCommentId) => {
+    return axios.post(API_URL+"addComment",{com,postId,parentCommentId},{
+        headers:headers()
+    })
+    .then((response) => {
+        return response.data
+    })
+}
+
+const exportedObject = {
     fetchPosts,
     fetchUserPosts,
     uploadPost,
     likePost,
     editPost,
-    deletePost
+    deletePost,
+    addComment,
+    fetchPost
 }
+
+export default exportedObject

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const FetchUser = require("../middleware/FetchUser");
-const Post = require('../models/Post');
 const User = require('../models/User');
 
 router.post('/getCurrentUser', FetchUser ,async (req, res) => {

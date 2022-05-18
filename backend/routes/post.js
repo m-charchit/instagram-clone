@@ -1,18 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const FetchUser = require("../middleware/FetchUser");
-const Comment = require("../models/Comment");
 const Post = require("../models/Post");
 
 router.get("/fetch", FetchUser ,  async (req, res) => {
   try {
     // @ts-ignore
     const posts = await Post.find({user:{$in:req.user.followings}})
-    .populate("user","_id username").populate("like","_id username name").select("-_v")
-    // posts.forEach(async (post)=>{
-    //   const comments = await Comment.find({post:post._id})
-    //   posts
-    // })
+    .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
     
     res.json(posts)
   } catch (error) {
@@ -20,6 +15,18 @@ router.get("/fetch", FetchUser ,  async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+router.post("/fetchPost",FetchUser, async (req,res) => {
+  try {
+    const {postId} = req.body
+    const post = await Post.findById(postId)
+    .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+    res.json(post)
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+})
 
 router.post("/fetchUserPosts",async (req,res) => {
   try {
@@ -54,7 +61,7 @@ router.post("/like", FetchUser, async (req, res) => {
     if(findPost){
       // @ts-ignore
       const likedPost = await Post.findByIdAndUpdate(postId,{$pull:{like:req.user.id}},{new:true})
-      .populate("user","_id username").populate("like","_id username name").select("-__v")
+      .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
     res.json(likedPost);
 
     }
@@ -64,7 +71,7 @@ router.post("/like", FetchUser, async (req, res) => {
       // @ts-ignore
       { $addToSet: { like: req.user.id } },
       { new: true }
-    ).populate("user","_id username").populate("like","_id username name").select("-__v");
+    ).populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
     res.json(likedPost);
     }
     
@@ -90,9 +97,21 @@ router.post("/delete",FetchUser,async (req,res)=>{
     const { postId } = req.body;
     // @ts-ignore
     const post = await Post.findOneAndDelete({_id:postId,user:req.user.id})
-    const comment = await Comment.deleteMany({post:postId})
     
     res.json(post);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+})
+
+router.post("/addComment",FetchUser,async( req, res )=>{
+  try {
+    const {com,postId,parentCommentId} = req.body
+    // @ts-ignore
+    const post = await Post.findByIdAndUpdate(postId,{$push: {comments:{comment:com,parentComment:parentCommentId,post:postId,user:req.user.id}}},{new:true})
+    .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+    res.json(post)
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");

@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { fetchComments } from '../state/Actions/comment'
-import { likePost } from '../state/Actions/post'
+import { addComment, likePost } from '../state/Actions/post'
 import { followActions } from '../state/Actions/user'
 import UserDialog from './UsersDialog'
 
 function PostPreview({post}) {
+  // @ts-ignore
   const {currentUser} = useSelector((state) => state.user)
-  const {comments} = useSelector((state) => state.comment)
   const dispatch = useDispatch()
   const [showLikeElem, setShowLikeElem] = useState(false)
-  useEffect(() => {
-    dispatch(fetchComments(post._id))
-  }, [dispatch])
+  const [comment, setComment] = useState("")
   
   const likePosts = () => {
     dispatch(likePost(post._id))
@@ -24,6 +21,14 @@ function PostPreview({post}) {
   const followAction = (type ,userId) => {
     dispatch(followActions(userId,type))
     
+  }
+  const InputHandle = (e) => {
+    setComment(e.target.value)
+  }
+  const uploadComment = (e) => {
+    e.preventDefault()
+    dispatch(addComment(comment,post._id))
+    setComment("")
   }
   return (
     <>
@@ -58,26 +63,35 @@ function PostPreview({post}) {
             <p className="text-gray-600">
               <b>{post.user.username}</b> {post.caption}
             </p>
+            {post && post.comments.length !== 0  &&
             <Link to={`/post/${post._id}`} className="outline-none text-gray-500 text-left text-sm w-fit active:text-gray-300 ">
-              View all 4 comments
+              View all {post.comments.length} comments
             </Link>
-            <p>
-              <a className="font-semibold">max0_s</a> Good
-            </p>
-            <p>
-              <a className="font-semibold">{post.user.username}</a> Thanks
-            </p>
+            }
+            {post && post.comments.length !== 0 && post.comments.slice(0,2).map((comment)=>{
+              return (
+                <div key={comment._id}>
+                <Link to={`/profile/${comment.user.username}`} className="font-semibold">{comment.user.username} </Link>
+               <span>{comment.comment}</span>
+            </div>
+              )  
+            })}
+            
           </div>
+          <form action="" method="post" onSubmit={uploadComment}>
           <div className="flex border-t p-3 justify-between">
             <input
               type="text"
               placeholder="Add a Comment..."
               className="w-full outline-none px-1"
+              onChange={InputHandle}
+              value={comment}
             />
             <button className="outline-none text-blue-400 hover:text-blue-700">
               Post
             </button>
           </div>
+          </form>
         </div>
         </>
   )

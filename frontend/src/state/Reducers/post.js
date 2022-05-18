@@ -6,6 +6,11 @@ const post = (state={},action) => {
                 ...state,
                 posts: action.payload.posts
             }
+        case "FETCH_POST_SUCCESS" :
+            return {
+                ...state,
+                posts: [action.payload.posts]
+            }
         case "FETCH_USER_POSTS" :
             return {
                 ...state,
@@ -22,6 +27,19 @@ const post = (state={},action) => {
             return {
                 ...state,
                 posts:state.posts
+            }
+        case "ADD_COMMENT_SUCCESS":
+            // if(Array.isArray(state.posts)){
+                state.posts[state.posts.findIndex(({_id})=>_id === action.payload.post._id)] = action.payload.post
+                return {
+                    ...state,
+                    posts:state.posts
+            //     }
+            // } else {
+            //     return {
+            //         ...state,
+            //         posts:action.payload.post
+            //     }
             }
         
         default:
