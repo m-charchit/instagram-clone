@@ -1,9 +1,11 @@
+// @ts-nocheck
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { addComment, fetchPost, likePost } from '../state/Actions/post'
+import { addComment, fetchPost, likePost, organizeComments } from '../state/Actions/post'
 import { followActions } from '../state/Actions/user'
 import UserDialog from './UsersDialog'
+
 
 function Post() {
   // @ts-ignore
@@ -14,10 +16,14 @@ function Post() {
   const [showLikeElem, setShowLikeElem] = useState(false)
   const [comment, setComment] = useState("")
   const inputEl = useRef(null)
+
   const {postId} = useParams()
   
   useEffect(() => {
-    dispatch(fetchPost(postId))
+    dispatch(fetchPost(postId)).then((data)=>{
+      dispatch(organizeComments(data))
+    })
+    
   }, [dispatch])
   
   const likePosts = () => {
@@ -35,8 +41,13 @@ function Post() {
   }
   const uploadComment = (e) => {
     e.preventDefault()
-    dispatch(addComment(comment,post[0]._id))
+    dispatch(addComment(comment,post[0]._id)).then((data)=>{
+      dispatch(organizeComments(data))
+    })
     setComment("")
+  }
+  const showReplies = () => {
+    
   }
   const commentIconClick = () => {
     inputEl.current.focus()
@@ -78,8 +89,27 @@ function Post() {
               <span>2w</span>
               <button>Reply</button>
             </div>
+            <button className="flex  items-center text-[#8e8e8e] space-x-4 ml-1 text-sm font-semibold" onClick={showReplies}>
+              <div className="border-b border-b-[#8e8e8e] w-6"></div>
+              <span className="">View replies (1) </span>
+            </button>
+            {comment.childComments.map((item)=>{
+              return (
+                <div className="flex space-x-3" key={item._id}>
+            <img src="/default.jpg" alt="" className="w-8 h-8 " />
+            <div className="flex flex-col space-y-2">
+               <div>
+                <Link className="font-semibold text-gray-700" to={`/profile/${item.user.username}`} >{item.user.username} </Link>
+               <span>{item.comment}</span>
+               </div> 
+               <div className="flex space-x-4 text-sm text-gray-500">
+              <span>2w</span>
             </div>
-          </div>
+            </div></div>
+              )
+            })}
+            </div>
+            </div>
               )  
             })}  
           </div>

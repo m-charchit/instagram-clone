@@ -11,6 +11,11 @@ const post = (state={},action) => {
                 ...state,
                 posts: [action.payload.posts]
             }
+        case "ORGANIZE_POST_SUCCESS" :
+            return {
+                ...state,
+                posts: [action.payload.posts]
+            }
         case "FETCH_USER_POSTS" :
             return {
                 ...state,

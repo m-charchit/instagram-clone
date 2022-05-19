@@ -8,7 +8,6 @@ router.get("/fetch", FetchUser ,  async (req, res) => {
     // @ts-ignore
     const posts = await Post.find({user:{$in:req.user.followings}})
     .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
-    
     res.json(posts)
   } catch (error) {
     console.log(error);
@@ -21,6 +20,9 @@ router.post("/fetchPost",FetchUser, async (req,res) => {
     const {postId} = req.body
     const post = await Post.findById(postId)
     .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+    post.comments.forEach((e)=>{
+      
+    })
     res.json(post)
   } catch (error) {
     console.log(error);
@@ -108,6 +110,7 @@ router.post("/delete",FetchUser,async (req,res)=>{
 router.post("/addComment",FetchUser,async( req, res )=>{
   try {
     const {com,postId,parentCommentId} = req.body
+    // await Post.findByIdAndUpdate(postId,{$set:{comments:[]}})
     // @ts-ignore
     const post = await Post.findByIdAndUpdate(postId,{$push: {comments:{comment:com,parentComment:parentCommentId,post:postId,user:req.user.id}}},{new:true})
     .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")

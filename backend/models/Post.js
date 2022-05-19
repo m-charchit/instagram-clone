@@ -14,6 +14,7 @@ const commentSchema = new Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"comment.c"
     },
+    childComments:[],
     user:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,

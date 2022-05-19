@@ -18,6 +18,26 @@ export const fetchPosts = () => (dispatch) => {
     )
 }
 
+export const organizeComments = (post) => (dispatch) => {
+    post.comments.reverse().forEach((e)=>{
+        if(e.parentComment !== undefined){
+            post.comments.forEach((b)=>{
+             if (b._id === e.parentComment){
+                 b.childComments.push(e)             
+             }   
+            })
+        }}
+            )
+    
+    post.comments = post.comments.filter((item)=>{
+      return item.parentComment === undefined
+    })
+       dispatch({
+                type:"ORGANIZE_POST_SUCCESS",
+                payload:{posts: post }
+            })
+}
+
 export const fetchPost = (postId) => (dispatch) => {
     return PostService.fetchPost(postId).then(
         (data)=>{
@@ -25,7 +45,7 @@ export const fetchPost = (postId) => (dispatch) => {
                 type:"FETCH_POST_SUCCESS",
                 payload:{posts: data }
             })
-            return Promise.resolve
+            return Promise.resolve(data)
         },
         (error)=>{
             dispatch({
@@ -98,7 +118,7 @@ export const addComment = (com,postId,parentCommentId) => (dispatch) => {
                 type:"ADD_COMMENT_SUCCESS",
                 payload:{post: data }
             })
-            return Promise.resolve
+            return data
         },
         (error)=>{
             dispatch({
