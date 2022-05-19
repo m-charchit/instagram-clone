@@ -20,6 +20,11 @@ export const fetchPosts = () => (dispatch) => {
 
 export const organizeComments = (post) => (dispatch) => {
     post.comments.reverse().forEach((e)=>{
+        // let name = e.comment.split(" ")[0]
+        // if(e.comment.startsWith("@")){
+        //     e.comment = e.comment.replace(name,`<Link to="/profile/${name.slice(1,)}"><Link>`)
+        // }
+        
         if(e.parentComment !== undefined){
             post.comments.forEach((b)=>{
              if (b._id === e.parentComment){

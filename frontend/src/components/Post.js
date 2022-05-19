@@ -14,6 +14,7 @@ function Post() {
   let {posts:post} = useSelector((state)=>state.post)
   const dispatch = useDispatch()
   const [showLikeElem, setShowLikeElem] = useState(false)
+  const [replyCommentId, SetReplyCommentId] = useState(undefined)
   const [comment, setComment] = useState("")
   const inputEl = useRef(null)
 
@@ -39,15 +40,24 @@ function Post() {
   const InputHandle = (e) => {
     setComment(e.target.value)
   }
+  const replyComment = (comId,username) => {
+    setComment(`@${username} `)
+    SetReplyCommentId(comId)
+  }
   const uploadComment = (e) => {
     e.preventDefault()
-    dispatch(addComment(comment,post[0]._id)).then((data)=>{
+    dispatch(addComment(comment,post[0]._id,replyCommentId)).then((data)=>{
       dispatch(organizeComments(data))
     })
     setComment("")
   }
-  const showReplies = () => {
-    
+  const showReplies = (e) => {
+    console.log(e)
+    if(e.target.nodeName === "BUTTON"){
+      e.target.nextElementSibling.classList.toggle("hidden")
+    } else {
+      e.target.parentElement.nextElementSibling.classList.toggle("hidden")
+    }
   }
   const commentIconClick = () => {
     inputEl.current.focus()
@@ -87,15 +97,18 @@ function Post() {
                </div> 
                <div className="flex space-x-4 text-sm text-gray-500">
               <span>2w</span>
-              <button>Reply</button>
+              <button onClick={()=>replyComment(comment._id,comment.user.username)}>Reply</button>
             </div>
+            {comment.childComments.length!==0 && 
             <button className="flex  items-center text-[#8e8e8e] space-x-4 ml-1 text-sm font-semibold" onClick={showReplies}>
               <div className="border-b border-b-[#8e8e8e] w-6"></div>
-              <span className="">View replies (1) </span>
+              <span className="">View replies ({comment.childComments.length}) </span>
             </button>
+            }
+            <div className="hidden">
             {comment.childComments.map((item)=>{
               return (
-                <div className="flex space-x-3" key={item._id}>
+                <div className="flex space-x-3 mt-3" key={item._id}>
             <img src="/default.jpg" alt="" className="w-8 h-8 " />
             <div className="flex flex-col space-y-2">
                <div>
@@ -108,6 +121,7 @@ function Post() {
             </div></div>
               )
             })}
+            </div>
             </div>
             </div>
               )  
