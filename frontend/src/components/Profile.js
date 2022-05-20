@@ -143,7 +143,7 @@ function Profile() {
                   />
                 <div className="w-full h-full absolute  justify-center items-center space-x-7 hidden md:flex">
                   <span className="font-semibold text-white"><i className="fas fa-heart text-xl text-white align-middle"></i> {post.like.length}</span>
-                  <span className="font-semibold text-white"><i className="fas fa-comment text-xl text-white align-middle"></i> 2390</span>
+                  <span className="font-semibold text-white"><i className="fas fa-comment text-xl text-white align-middle"></i> {post.comments.length}</span>
                 </div>
               </div>
             </Link>

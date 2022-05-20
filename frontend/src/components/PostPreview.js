@@ -86,8 +86,9 @@ function PostPreview({post}) {
               className="w-full outline-none px-1"
               onChange={InputHandle}
               value={comment}
+              name="com"
             />
-            <button className="outline-none text-blue-400 hover:text-blue-700">
+            <button  className="outline-none text-blue-400 hover:text-blue-700 " disabled={comment.trim().length === 0}>
               Post
             </button>
           </div>

@@ -62,6 +62,17 @@ router.post("/searchUser", async (req,res)=>{
     }
 })
 
+router.get("/getSuggestedUsers",FetchUser,async(req,res)=> {
+    try {
+        // @ts-ignore
+        const user = await User.findById(req.user.id).populate("followers","followers").select("followers")
+        res.json(user)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Internal Server Error")
+    }
+})
+
 router.post("/account/edit",FetchUser,async(req,res)=>{
     try {
         

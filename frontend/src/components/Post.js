@@ -1,5 +1,7 @@
 // @ts-nocheck
 import React, { useEffect, useRef, useState } from "react";
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { addComment, fetchPost, likePost, organizeComments } from '../state/Actions/post'
@@ -17,6 +19,7 @@ function Post() {
   const [replyCommentId, SetReplyCommentId] = useState(undefined)
   const [comment, setComment] = useState("")
   const inputEl = useRef(null)
+  const replyToEl = useRef(null)
 
   const {postId} = useParams()
   
@@ -41,14 +44,22 @@ function Post() {
     setComment(e.target.value)
   }
   const replyComment = (comId,username) => {
-    setComment(`@${username} `)
     SetReplyCommentId(comId)
+    replyToEl.current.parentElement.classList.remove("hidden")
+    replyToEl.current.innerText = `Replying to ${username}`
+    inputEl.current.focus()
+  }
+  const removeReplyBox = () => {
+    SetReplyCommentId(undefined)
+    replyToEl.current.parentElement.classList.add("hidden")
+
   }
   const uploadComment = (e) => {
     e.preventDefault()
     dispatch(addComment(comment,post[0]._id,replyCommentId)).then((data)=>{
       dispatch(organizeComments(data))
     })
+    removeReplyBox()
     setComment("")
   }
   const showReplies = (e) => {
@@ -69,24 +80,24 @@ function Post() {
     data2={currentUser.followings} followAction={followAction} 
     crUsername={currentUser.username}/>}
 
-    <div className="md:container mx-auto xl:px-24 lg:px-12">
+    <div className="lg:container mx-auto lg:px-3 md:px-2">
       <div className="flex flex-col md:flex-row border md:my-8 h-full shadow-md">
-        <img src="/walk.jpg" alt="" className="w-full md:w-2/3 " />
-        <div className="flex flex-col bg-white  md:w-96">
+        <img src="/walk.jpg" alt="" className="w-full md:w-[65%] " />
+        <div className="flex flex-col bg-white w-full h-[600px] ">
           <div className="flex py-5 px-4 border-b">
             <img src="/default.jpg" alt="" className="w-8 h-8 " />
             <div className="grid ml-4 -mt-1">
-              <span className="text-sm">{post &&  post[0].user.username}</span>
+              <span className="text-sm">{(post &&  post[0].user.username) || <Skeleton />}</span>
               <span className="text-xs text-gray-500">Narela City (Delhi)</span>
             </div>
             <i className="fas fa-ellipsis-h text-gray-500 float-right ml-auto my-auto"></i>
           </div>
-          <div className="flex border-b h-64 overflow-auto flex-col p-4 space-y-5">
+          <div className="flex border-b h-full overflow-auto flex-col p-4 space-y-5">
           <div className="flex space-x-3">
             <img src="/default.jpg" alt="" className="w-8 h-8 " />
-            <p><span className="font-semibold text-gray-700" >{post && post[0].user.username} </span> {post && post[0].caption}</p>
+            <p><span className="font-semibold text-gray-700" >{(post && post[0].user.username) || <Skeleton width={"100px"}/>}  </span> {post && post[0].caption}</p>
           </div>
-            {post && post[0].comments.length !== 0 && post[0].comments.map((comment)=>{
+            {post ? post[0].comments.length !== 0 && post[0].comments.map((comment)=>{
               return (
                 <div className="flex space-x-3" key={comment._id}>
             <img src="/default.jpg" alt="" className="w-8 h-8 " />
@@ -125,7 +136,8 @@ function Post() {
             </div>
             </div>
               )  
-            })}  
+            }):<div style={{"border-top-color":"transparent"}}
+            class="m-auto w-16 h-16 border-4 border-gray-400 border-solid rounded-full animate-spin"></div>}  
           </div>
           <div className="flex flex-col p-3 space-y-3">
           <div className="w-full ">
@@ -137,24 +149,31 @@ function Post() {
               <i className="far fa-bookmark text-2xl cursor-pointer float-right"></i>
                 
           </div>
-          <p className="font-thin">
-          Liked by <button className="font-semibold" onClick={showElem}>{post && post[0].like.length} users</button>
-            </p>
+          {post ? <p className="font-thin">
+          Liked by <button className="font-semibold" onClick={showElem}>{post[0].like.length} users</button>
+            </p>:<Skeleton count={0.5}/>}
             <p className="text-gray-400 text-xs font-extralight">APRIL 29</p>
             </div>
             <form action="" method="post" onSubmit={uploadComment}>
-          <div className="flex border-t p-3 justify-between">
+          <div className="flex pb-3 flex-col  relative space-y-2">
+            <div className="flex absolute bg-white border-t w-full -top-9 pt-2 px-3 rounded-sm  items-center space-x-3 hidden">
+            {<p className="w-full text-gray-500" ref={replyToEl}></p>}
+              <i className="fas fa-times text-lg cursor-pointer" onClick={removeReplyBox}></i>
+            </div>
+            <div className="flex justify-between mx-2 py-3 px-4 border rounded-3xl">
             <input
               type="text"
               placeholder="Add a Comment..."
               className="w-full outline-none px-1"
+              name="com"
               onChange={InputHandle}
               ref={inputEl}
               value={comment}
             />
-            <button className="outline-none text-blue-400 hover:text-blue-700">
+            <button className="outline-none disabled:text-blue-400 text-blue-900 hover:text-blue-700" disabled={comment.trim().length === 0}>
               Post
             </button>
+            </div>
           </div>
           </form>
         </div>

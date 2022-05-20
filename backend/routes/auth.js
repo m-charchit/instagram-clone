@@ -8,7 +8,7 @@ const User = require("../models/User")
 const JWT_STRING = "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
 router.post('/register', [
-    body('username','Enter a valid Username').isLength({min:5}),
+    body('username','Enter a valid Username').isLength({min:5}).custom(value => !/\s/.test(value)),
     body('name', "Enter a valid Name").isLength({ min: 5, max: 40 }),
     body('email', "Enter a valid Email").isEmail(),
     body('password', "Password must be atleast 5 characters").isLength({ min: 5 })],

@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { body, validationResult } = require('express-validator');
 const FetchUser = require("../middleware/FetchUser");
 const Post = require("../models/Post");
 
@@ -107,10 +108,16 @@ router.post("/delete",FetchUser,async (req,res)=>{
   }
 })
 
-router.post("/addComment",FetchUser,async( req, res )=>{
+router.post("/addComment",
+[body('com','Enter a Valid comment').trim().notEmpty().isLength({max:120})],
+FetchUser,async( req, res )=>{
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {    
+        return res.status(400).json({ errors: errors.array() });
+    }
     const {com,postId,parentCommentId} = req.body
-    // await Post.findByIdAndUpdate(postId,{$set:{comments:[]}})
+    // await Post.findByIdAndUpdate(postId,{$set:{comments:[]}})        
     // @ts-ignore
     const post = await Post.findByIdAndUpdate(postId,{$push: {comments:{comment:com,parentComment:parentCommentId,post:postId,user:req.user.id}}},{new:true})
     .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
