@@ -39,6 +39,11 @@ const user = (state={},action) => {
             return {
                 ...state,
             }
+        case "GET_SUGGESTED_USERS_SUCCESS":
+            return {
+                ...state,
+                users:action.payload
+            }
         default:
             return state
     }

@@ -65,8 +65,9 @@ router.post("/searchUser", async (req,res)=>{
 router.get("/getSuggestedUsers",FetchUser,async(req,res)=> {
     try {
         // @ts-ignore
-        const user = await User.findById(req.user.id).populate("followers","followers").select("followers")
-        res.json(user)
+        // const user = await User.findById(req.user.id).populate("followers","followers").select("followers")
+        const users = await User.find({_id:{$ne:req.user.id},"followers":{$ne:req.user.id}}).select("username name _id ")
+        res.json(users)
     } catch (error) {
         console.log(error)
         res.status(500).send("Internal Server Error")

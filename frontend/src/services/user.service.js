@@ -47,11 +47,25 @@ const checkFollow = (userId) => {
         return response.data
     })
 }
+
+const getSuggestedUsers = () => {
+    return axios.get(API_URL+"getSuggestedUsers",
+    {
+        headers:headers()
+    }
+    )
+    .then((response)=>{
+        return response.data
+    })
+}
+
+
 const exportedObject = {
     getCurrentUser,
     getUser,
     followActions,
     checkFollow,
+    getSuggestedUsers
 }
 
 export default exportedObject

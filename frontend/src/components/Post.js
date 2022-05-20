@@ -80,10 +80,10 @@ function Post() {
     data2={currentUser.followings} followAction={followAction} 
     crUsername={currentUser.username}/>}
 
-    <div className="lg:container mx-auto lg:px-3 md:px-2">
-      <div className="flex flex-col md:flex-row border md:my-8 h-full shadow-md">
+    <div className="lg:container mx-auto lg:px-3 md:px-2 ">
+      <div className="flex flex-col md:flex-row border md:my-7 shadow-md h-[80vh]">
         <img src="/walk.jpg" alt="" className="w-full md:w-[65%] " />
-        <div className="flex flex-col bg-white w-full h-[600px] ">
+        <div className="flex flex-col bg-white w-full md:w-[35%] ">
           <div className="flex py-5 px-4 border-b">
             <img src="/default.jpg" alt="" className="w-8 h-8 " />
             <div className="grid ml-4 -mt-1">
@@ -136,10 +136,10 @@ function Post() {
             </div>
             </div>
               )  
-            }):<div style={{"border-top-color":"transparent"}}
-            class="m-auto w-16 h-16 border-4 border-gray-400 border-solid rounded-full animate-spin"></div>}  
+            }):<div style={{"borderTopColor":"transparent"}}
+            className="m-auto w-16 h-16 border-4 border-gray-400 border-solid rounded-full animate-spin"></div>}  
           </div>
-          <div className="flex flex-col p-3 space-y-3">
+          <div className="flex flex-col p-3 space-y-2">
           <div className="w-full ">
               <div className="flex space-x-3 float-left">
               <i className={`${post && post[0].like.length !== 0 && currentUser && post[0].like.findIndex(({_id})=> _id === currentUser._id) !== -1 ? "fas text-red-500" : "far"} fa-heart text-2xl cursor-pointer`} onClick={likePosts}></i>

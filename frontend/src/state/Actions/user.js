@@ -63,3 +63,18 @@ export const checkFollow = (userId) => (dispatch) =>{
     })
 }
 
+export const getSuggestedUsers = () => (dispatch) => {
+    return UserService.getSuggestedUsers()
+    .then((data)=>{
+        dispatch({
+            type:"GET_SUGGESTED_USERS_SUCCESS",
+            payload:data
+        })
+        return Promise.resolve
+    })
+    .catch((error)=>{
+        dispatch({
+            type:"GET_SUGGESTED_USERS_FAIL",
+        })
+    })
+}
