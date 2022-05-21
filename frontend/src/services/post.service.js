@@ -85,6 +85,14 @@ const addComment = (com,postId,parentCommentId) => {
         return response.data
     })
 }
+const deleteComment = (commentId) => {
+    return axios.post(API_URL+"deleteComment",{commentId},{
+        headers:headers()
+    })
+    .then((response) => {
+        return response.data
+    })
+}
 
 const exportedObject = {
     fetchPosts,
@@ -94,6 +102,7 @@ const exportedObject = {
     editPost,
     deletePost,
     addComment,
+    deleteComment,
     fetchPost
 }
 

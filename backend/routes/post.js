@@ -108,6 +108,47 @@ router.post("/delete",FetchUser,async (req,res)=>{
   }
 })
 
+async function getId(result,finalList){
+  for(let i of result){
+      let a  = await Post.aggregate([
+        {$match:{"comments.parentComment":i._id}},
+        {$project: {
+          comments:{$filter: {
+            input: '$comments',
+            as: 'comment',
+            cond: {$eq: ['$$comment.parentComment', i._id]}
+        }},
+        }}
+      ])
+      if(a.length!=0) a = a[0].comments
+      finalList.push(i._id)
+      if (a.length != 0 && result.indexOf(i)==result.length-1){
+          await getId(a,finalList)
+      } else if (result.indexOf(i)!=result.length-1) {
+          continue
+      } else{
+          return finalList
+      }
+  }
+  return finalList
+}
+
+router.post("/deleteComment",FetchUser,async(req,res)=>{
+    try {
+      const {commentId} = req.body    
+      // @ts-ignore
+      const post = await Post.findOne({"comments.user":req.user.id,"comments._id":commentId},{"comments.$":1})
+      const a = await getId(post.comments,[])
+      // @ts-ignore
+      const posts = await Post.findOneAndUpdate({"comments.user":req.user.id,"comments._id":commentId},{$pull:{"comments":{_id:a}}},{new:true})
+      .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+      res.json(posts)
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Internal Server Error");
+    }
+})
+
 router.post("/addComment",
 [body('com','Enter a Valid comment').trim().notEmpty().isLength({max:120})],
 FetchUser,async( req, res )=>{

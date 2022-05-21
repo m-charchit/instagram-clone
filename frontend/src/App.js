@@ -43,12 +43,12 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="upload" element={<UploadPost />} />
         </Route>
-        {/* <Route element={<ProtectedRoute />}> */}
+        <Route element={<ProtectedRoute />}>
           <Route path="post">
           <Route path=":postId" element={<Post />} />
           <Route path="" element={<NotFound />} />
           </Route>
-        {/* </Route> */}
+        </Route>
         <Route path="*" element={<NotFound />} />
       </CustomSwitch>
     </>

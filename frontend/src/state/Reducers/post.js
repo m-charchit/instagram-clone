@@ -34,17 +34,16 @@ const post = (state={},action) => {
                 posts:state.posts
             }
         case "ADD_COMMENT_SUCCESS":
-            // if(Array.isArray(state.posts)){
                 state.posts[state.posts.findIndex(({_id})=>_id === action.payload.post._id)] = action.payload.post
                 return {
                     ...state,
                     posts:state.posts
-            //     }
-            // } else {
-            //     return {
-            //         ...state,
-            //         posts:action.payload.post
-            //     }
+            }
+        case "DELETE_COMMENT_SUCCESS":
+                state.posts[state.posts.findIndex(({_id})=>_id === action.payload.post._id)] = action.payload.post
+                return {
+                    ...state,
+                    posts:state.posts
             }
         
         default:

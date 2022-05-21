@@ -105,7 +105,7 @@ export const likePost = (postId) => (dispatch) => {
                 type:"LIKE_POST_SUCCESS",
                 payload:{post: data }
             })
-            return Promise.resolve
+            return data
         },
         (error)=>{
             dispatch({
@@ -128,6 +128,23 @@ export const addComment = (com,postId,parentCommentId) => (dispatch) => {
         (error)=>{
             dispatch({
                 type:"ADD_COMMENT_FAIL"
+            })
+            return Promise.reject
+        }
+    )
+}
+export const deleteComment = (commentId) => (dispatch) => {
+    return PostService.deleteComment(commentId).then(
+        (data)=>{
+            dispatch({
+                type:"DELETE_COMMENT_SUCCESS",
+                payload:{post: data }
+            })
+            return data
+        },
+        (error)=>{
+            dispatch({
+                type:"DELETE_COMMENT_FAIL"
             })
             return Promise.reject
         }

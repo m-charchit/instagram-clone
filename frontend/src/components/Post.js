@@ -4,7 +4,7 @@ import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { addComment, fetchPost, likePost, organizeComments } from '../state/Actions/post'
+import { addComment, deleteComment, fetchPost, likePost, organizeComments } from '../state/Actions/post'
 import { followActions } from '../state/Actions/user'
 import UserDialog from './UsersDialog'
 
@@ -31,7 +31,14 @@ function Post() {
   }, [dispatch])
   
   const likePosts = () => {
-    dispatch(likePost(post[0]._id))
+    dispatch(likePost(post[0]._id)).then((data)=>{
+      dispatch(organizeComments(data))
+    })
+  }
+  const dltComment = (commentId) => {
+    dispatch(deleteComment(commentId)).then((data)=>{
+      dispatch(organizeComments(data))
+    })
   }
   const showElem = () => { 
     setShowLikeElem(true)
@@ -102,13 +109,14 @@ function Post() {
                 <div className="flex space-x-3" key={comment._id}>
             <img src="/default.jpg" alt="" className="w-8 h-8 " />
             <div className="flex flex-col space-y-2">
-               <div>
+               <div className="">
                 <Link className="font-semibold text-gray-700" to={`/profile/${comment.user.username}`} >{comment.user.username} </Link>
                <span>{comment.comment}</span>
                </div> 
-               <div className="flex space-x-4 text-sm text-gray-500">
+               <div className="flex space-x-4 text-sm text-gray-500 items-center">
               <span>2w</span>
               <button onClick={()=>replyComment(comment._id,comment.user.username)}>Reply</button>
+              {currentUser && comment.user.username === currentUser.username && <i className="fas fa-trash-alt float-right cursor-pointer" onClick={()=>dltComment(comment._id)}></i>}
             </div>
             {comment.childComments.length!==0 && 
             <button className="flex  items-center text-[#8e8e8e] space-x-4 ml-1 text-sm font-semibold" onClick={showReplies}>
@@ -126,8 +134,10 @@ function Post() {
                 <Link className="font-semibold text-gray-700" to={`/profile/${item.user.username}`} >{item.user.username} </Link>
                <span>{item.comment}</span>
                </div> 
-               <div className="flex space-x-4 text-sm text-gray-500">
+               <div className="flex space-x-4 text-sm text-gray-500 items-center">
               <span>2w</span>
+              {currentUser && item.user.username === currentUser.username && <i className="fas fa-trash-alt float-right cursor-pointer" onClick={()=>dltComment(item._id)}></i>}
+
             </div>
             </div></div>
               )
