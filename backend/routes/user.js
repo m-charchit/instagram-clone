@@ -1,4 +1,5 @@
 const express = require('express');
+const { default: mongoose } = require('mongoose');
 const router = express.Router();
 const FetchUser = require("../middleware/FetchUser");
 const User = require('../models/User');
@@ -65,8 +66,15 @@ router.post("/searchUser", async (req,res)=>{
 router.get("/getSuggestedUsers",FetchUser,async(req,res)=> {
     try {
         // @ts-ignore
-        // const user = await User.findById(req.user.id).populate("followers","followers").select("followers")
-        const users = await User.find({_id:{$ne:req.user.id},"followers":{$ne:req.user.id}}).select("username name _id ")
+        let userId = mongoose.Types.ObjectId(req.user.id)
+        const users = await User.aggregate([
+            {$match:{
+                "_id":{$ne:userId},
+                "followers":{$ne:userId}
+        }},
+            {$sample: {size: 5}},
+            {$project:{username:1,_id:1,name:1}}
+        ])
         res.json(users)
     } catch (error) {
         console.log(error)

@@ -150,3 +150,22 @@ export const deleteComment = (commentId) => (dispatch) => {
         }
     )
 }
+export const deletePost = (postId) => (dispatch) => {
+    console.log("S")
+    return PostService.deletePost(postId).then(
+        (data)=>{
+            console.log(data)
+            dispatch({
+                type:"DELETE_POST_SUCCESS",
+                payload:data
+            })
+            return data
+        },
+        (error)=>{
+            dispatch({
+                type:"DELETE_POST_FAIL"
+            })
+            return Promise.reject
+        }
+    )
+}

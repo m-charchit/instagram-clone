@@ -45,6 +45,11 @@ const post = (state={},action) => {
                     ...state,
                     posts:state.posts
             }
+        case "DELETE_POST_SUCCESS":
+                return {
+                    ...state,
+                    posts:action.payload.data
+            }
         
         default:
             return state

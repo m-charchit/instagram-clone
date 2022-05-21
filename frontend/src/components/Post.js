@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
-import { addComment, deleteComment, fetchPost, likePost, organizeComments } from '../state/Actions/post'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { addComment, deleteComment, deletePost, fetchPost, likePost, organizeComments } from '../state/Actions/post'
 import { followActions } from '../state/Actions/user'
 import UserDialog from './UsersDialog'
 
@@ -15,6 +15,7 @@ function Post() {
   // @ts-ignore
   let {posts:post} = useSelector((state)=>state.post)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [showLikeElem, setShowLikeElem] = useState(false)
   const [replyCommentId, SetReplyCommentId] = useState(undefined)
   const [comment, setComment] = useState("")
@@ -38,6 +39,11 @@ function Post() {
   const dltComment = (commentId) => {
     dispatch(deleteComment(commentId)).then((data)=>{
       dispatch(organizeComments(data))
+    })
+  }
+  const dltPost = () => {
+    dispatch(deletePost(post[0]._id)).then(()=>{
+      navigate("/")
     })
   }
   const showElem = () => { 
@@ -97,7 +103,7 @@ function Post() {
               <span className="text-sm">{(post &&  post[0].user.username) || <Skeleton />}</span>
               <span className="text-xs text-gray-500">Narela City (Delhi)</span>
             </div>
-            <i className="fas fa-ellipsis-h text-gray-500 float-right ml-auto my-auto"></i>
+            {currentUser && post && post[0].user.username === currentUser.username && <i className="fas fa-trash-alt text-gray-500 float-right ml-auto my-auto" onClick={dltPost}></i>}
           </div>
           <div className="flex border-b h-full overflow-auto flex-col p-4 space-y-5">
           <div className="flex space-x-3">

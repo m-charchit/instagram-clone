@@ -66,7 +66,7 @@ const editPost = (caption,postId) => {
 }
 
 const deletePost = (postId) => {
-    return axios.post(API_URL+"edit",{
+    return axios.post(API_URL+"delete",{
         postId
     },
     {

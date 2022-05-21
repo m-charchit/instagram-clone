@@ -98,10 +98,12 @@ router.post("/edit",FetchUser,async (req,res)=>{
 router.post("/delete",FetchUser,async (req,res)=>{
   try {
     const { postId } = req.body;
+    console.log(postId)
     // @ts-ignore
-    const post = await Post.findOneAndDelete({_id:postId,user:req.user.id})
-    
-    res.json(post);
+    console.log(await Post.findOneAndDelete({_id:postId,user:req.user.id}))
+    const posts = await Post.find({user:{$in:req.user.followings}})
+    .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+    res.json(posts);
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
@@ -158,8 +160,6 @@ FetchUser,async( req, res )=>{
         return res.status(400).json({ errors: errors.array() });
     }
     const {com,postId,parentCommentId} = req.body
-    // await Post.findByIdAndUpdate(postId,{$set:{comments:[]}})        
-    // @ts-ignore
     const post = await Post.findByIdAndUpdate(postId,{$push: {comments:{comment:com,parentComment:parentCommentId,post:postId,user:req.user.id}}},{new:true})
     .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
     res.json(post)
