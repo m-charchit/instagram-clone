@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addComment, likePost } from '../state/Actions/post'
 import { followActions } from '../state/Actions/user'
+import OptionDialog from './OptionDialog'
 import UserDialog from './UsersDialog'
 
-function PostPreview({post}) {
+function PostPreview({post,setShowOptionDialog}) {
   // @ts-ignore
   const {currentUser} = useSelector((state) => state.user)
   const dispatch = useDispatch()
@@ -14,9 +15,6 @@ function PostPreview({post}) {
   
   const likePosts = () => {
     dispatch(likePost(post._id))
-  }
-  const showElem = () => {
-    setShowLikeElem(true)
   }
   const followAction = (type ,userId) => {
     dispatch(followActions(userId,type))
@@ -44,7 +42,7 @@ function PostPreview({post}) {
               <span className="text-sm">{post.user.username}</span>
               <span className="text-xs text-gray-500">Narela City (Delhi)</span>
             </div>
-            <i className="fas fa-ellipsis-h text-gray-500 float-right ml-auto my-auto"></i>
+            <i className="fas fa-ellipsis-h text-gray-500 float-right ml-auto my-auto" onClick={()=>{setShowOptionDialog(true)}}></i>
           </div>
           <img src="/walk.jpg" alt="" />
           <div className="flex flex-col py-3 px-4">
@@ -58,7 +56,7 @@ function PostPreview({post}) {
               <i className="far fa-bookmark text-2xl cursor-pointer float-right"></i>
             </div>
             <p className="font-thin">
-              Liked by <button className="font-semibold" onClick={showElem}>{post.like.length} users</button>
+              Liked by <button className="font-semibold" onClick={()=>{setShowLikeElem(true)}}>{post.like.length} users</button>
             </p>
             <p className="text-gray-600">
               <b>{post.user.username}</b> {post.caption}
