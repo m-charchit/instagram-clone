@@ -7,7 +7,7 @@ const Post = require("../models/Post");
 router.get("/fetch", FetchUser ,  async (req, res) => {
   try {
     // @ts-ignore
-    const posts = await Post.find({user:{$in:req.user.followings}})
+    const posts = await Post.find({user:{$in:[req.user.followings,req.user.id]}})
     .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
     res.json(posts)
   } catch (error) {
@@ -101,7 +101,7 @@ router.post("/delete",FetchUser,async (req,res)=>{
     console.log(postId)
     // @ts-ignore
     console.log(await Post.findOneAndDelete({_id:postId,user:req.user.id}))
-    const posts = await Post.find({user:{$in:req.user.followings}})
+    const posts = await Post.find({user:{$in:[req.user.followings,req.user.id]}})
     .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
     res.json(posts);
   } catch (error) {

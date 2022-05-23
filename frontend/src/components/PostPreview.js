@@ -1,17 +1,25 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { addComment, likePost } from '../state/Actions/post'
+import { Link, useNavigate } from 'react-router-dom'
+import { addComment, deletePost, likePost } from '../state/Actions/post'
 import { followActions } from '../state/Actions/user'
 import OptionDialog from './OptionDialog'
 import UserDialog from './UsersDialog'
 
-function PostPreview({post,setShowOptionDialog}) {
+function PostPreview({post}) {
   // @ts-ignore
   const {currentUser} = useSelector((state) => state.user)
   const dispatch = useDispatch()
   const [showLikeElem, setShowLikeElem] = useState(false)
+  const [showOptionDialog, setShowOptionDialog] = useState(false)
   const [comment, setComment] = useState("")
+  const navigate = useNavigate()
+  const buttonData = [
+  
+  ...(currentUser && post.user._id === currentUser._id) ? [{msg:"Delete",color:"red",fun:()=>{dispatch(deletePost(post._id))}}] : [],
+  {msg:"Go To Post",fun:()=>{navigate(`/post/${post._id}`)}},
+  {msg:"Copy Link",fun:()=>{navigator.clipboard.writeText(`http://localhost:3000/post/${post._id}`)}}
+]
   
   const likePosts = () => {
     dispatch(likePost(post._id))
@@ -30,6 +38,7 @@ function PostPreview({post,setShowOptionDialog}) {
   }
   return (
     <>
+    {showOptionDialog && <OptionDialog hideElem={setShowOptionDialog} buttonData={buttonData} />}
     {showLikeElem && post.like.length !== 0 && <UserDialog title="Likes" 
     hideElem={setShowLikeElem} data={post&& post.like} 
     data2={currentUser&& currentUser.followings} followAction={followAction} 

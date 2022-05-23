@@ -11,16 +11,13 @@ function Home() {
   const dispatch = useDispatch()
   const {posts} = useSelector((state) => state.post)
   const {users,currentUser} = useSelector(state => state.user)
-  const [showOptionDialog, setShowOptionDialog] = useState(false)
   useEffect(() => {
     dispatch(fetchPosts())
     dispatch(getSuggestedUsers())
-    setShowOptionDialog(false)
   }, [dispatch])
 
   return (
     <>
-    {showOptionDialog && <OptionDialog hideElem={setShowOptionDialog} buttonData={[{msg:"Delete",color:"red",fun:()=>{console.log("hi")}}]} />}
     <div className="md:container mx-auto xl:px-44 lg:px-20  space-y-6">
       <div className="flex flex-col lg:flex-row relative space-y-6">
       <div className="lg:w-2/3 bg-white flex space-x-4 px-5 py-3 border md:mt-7 overflow-auto h-fit">
@@ -70,7 +67,7 @@ function Home() {
       </div>
       <div className="flex flex-col space-y-6 lg:w-2/3 ">
       {posts && posts.length !== 0 ? posts.map((post)=>{
-        return <PostPreview post={post} setShowOptionDialog={setShowOptionDialog} key={post._id}/>
+        return <PostPreview post={post} key={post._id}/>
       }) : <>
         <p className="text-center m-auto font-semibold text-3xl text-gray-600" >No Posts Available</p>
         <p className="text-center m-auto font-semibold text-gray-600">Users you have followed haven't posted yet. <br />Follow more people to see post</p>

@@ -7,13 +7,13 @@ import EditProfile from "./components/EditProfile";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import NotFound from "./components/NotFound";
-import { BrowserRouter, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import { useDispatch } from "react-redux";
 import { getCurrentUser } from "./state/Actions/user";
 import CustomSwitch from "./components/CustomSwitch";
 import Post from "./components/Post";
-
+import Footer from "./components/Footer"
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -51,6 +51,7 @@ function App() {
         </Route>
         <Route path="*" element={<NotFound />} />
       </CustomSwitch>
+      <Footer/>
     </>
   );
 }

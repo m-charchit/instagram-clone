@@ -34,7 +34,7 @@ function UserDialog(props) {
   }
   
   return (
-    <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-30 backdrop-brightness-50'>
+    <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-30 backdrop-brightness-50' style={{"margin":"0px"}}>
       { progress && <LoadingBar/>}
         <div className="bg-white border rounded-xl w-96 h-96 overflow-auto  animate-showModal ">
             <div className='relative my-2 font-semibold flex justify-center items-center'>

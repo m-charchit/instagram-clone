@@ -9,8 +9,8 @@ module.exports = {
       },
       keyframes: {
         showModal : {
-          "from" : {transform:'scale(1.2)',opacity:"0"},
-          "to" : {transform:'scale(1)',opacity:"1"}
+          "from" : {opacity:"0",transform:'scale(1.2)',},
+          "to" : {opacity:"1",transform:'scale(1)',}
         }
       }
     },

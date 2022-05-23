@@ -48,7 +48,7 @@ const post = (state={},action) => {
         case "DELETE_POST_SUCCESS":
                 return {
                     ...state,
-                    posts:action.payload.data
+                    posts:action.payload
             }
         
         default:
