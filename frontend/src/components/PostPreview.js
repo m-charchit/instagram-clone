@@ -15,7 +15,6 @@ function PostPreview({post}) {
   const [comment, setComment] = useState("")
   const navigate = useNavigate()
   const buttonData = [
-  
   ...(currentUser && post.user._id === currentUser._id) ? [{msg:"Delete",color:"red",fun:()=>{dispatch(deletePost(post._id))}}] : [],
   {msg:"Go To Post",fun:()=>{navigate(`/post/${post._id}`)}},
   {msg:"Copy Link",fun:()=>{navigator.clipboard.writeText(`http://localhost:3000/post/${post._id}`)}}

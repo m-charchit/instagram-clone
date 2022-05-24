@@ -1,7 +1,8 @@
 import PostService from "../../services/post.service";
 
-export const fetchPosts = () => (dispatch) => {
-    return PostService.fetchPosts().then(
+export const fetchPosts = (page) => (dispatch) => {
+    
+    return PostService.fetchPosts(page).then(
         (data)=>{
             dispatch({
                 type:"FETCH_POSTS",
@@ -61,8 +62,8 @@ export const fetchPost = (postId) => (dispatch) => {
     )
 }
 
-export const fetchUserPosts = (userId) => (dispatch) => {
-    return PostService.fetchUserPosts(userId).then(
+export const fetchUserPosts = (userId,page) => (dispatch) => {
+    return PostService.fetchUserPosts(userId,page).then(
         (data)=>{
             dispatch({
                 type:"FETCH_USER_POSTS",

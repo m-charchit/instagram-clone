@@ -4,11 +4,18 @@ const { body, validationResult } = require('express-validator');
 const FetchUser = require("../middleware/FetchUser");
 const Post = require("../models/Post");
 
+const options = {
+  limit: 1,
+  select:"-_v",
+  populate:[{path:"user",select:"_id username"},{path:"like",select:"_id username name"},
+  {path:"comments.user",select:"_id username"}]
+};
+
 router.get("/fetch", FetchUser ,  async (req, res) => {
   try {
+    console.log(req.query.page)
     // @ts-ignore
-    const posts = await Post.find({user:{$in:[req.user.followings,req.user.id]}})
-    .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+    const posts = await Post.paginate({user:{$in:[req.user.followings,req.user.id]}},{...options,page:req.query.page})
     res.json(posts)
   } catch (error) {
     console.log(error);
@@ -21,9 +28,6 @@ router.post("/fetchPost",FetchUser, async (req,res) => {
     const {postId} = req.body
     const post = await Post.findById(postId)
     .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
-    post.comments.forEach((e)=>{
-      
-    })
     res.json(post)
   } catch (error) {
     console.log(error);
@@ -33,10 +37,12 @@ router.post("/fetchPost",FetchUser, async (req,res) => {
 
 router.post("/fetchUserPosts",async (req,res) => {
   try {
-    const {userId} = req.body
+    const {userId,page} = req.body
+    console.log(userId,page)
     // @ts-ignore
-    const posts = await Post.find({user:userId});
+    const posts = await Post.paginate({user:userId},{limit:3,select:"_id like comments",page:page})
     res.json(posts)
+    // @ts-ignore
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");

@@ -1,5 +1,5 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 // @ts-nocheck
-/* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
@@ -7,6 +7,8 @@ import { fetchUserPosts } from "../state/Actions/post";
 import { checkFollow, followActions, getUser } from "../state/Actions/user";
 import UserDialog from "./UsersDialog";
 import NotFound from "./NotFound";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Spinner from "./Spinner";
 
 function Profile() {
   const {username} = useParams()
@@ -17,13 +19,14 @@ function Profile() {
 
   const [showFollowerElem, setShowFollowerElem] = useState(false)
   const [showFollowingElem, setShowFollowingElem] = useState(false)
-  const { posts } = useSelector((state) => state.post)
+  const { userPosts } = useSelector((state) => state.post)
 
   useEffect(() => {
     dispatch(getUser(username))
     .then((user)=>{
       dispatch(checkFollow(user._id))
-      dispatch(fetchUserPosts(user._id))
+      
+      !userPosts && dispatch(fetchUserPosts(user._id,1))
     })
     setShowFollowerElem(false)
     setShowFollowingElem(false)
@@ -86,7 +89,7 @@ function Profile() {
             </div>
             <div className="md:flex mt-7 hidden">
               <span className="mr-7 flex">
-                <b className="font-semibold mr-1">{posts && posts.length}</b> posts
+                <b className="font-semibold mr-1">{userPosts && userPosts.length}</b> posts
               </span>
               <span className="mr-7 flex cursor-pointer" onClick={showFollowers}>
                 <b className="font-semibold mr-1">{ user && user.followers.length}</b> followers
@@ -99,16 +102,10 @@ function Profile() {
         </div>
         <div className="w-max mt-5 pl-5 md:pl-7 md:-mt-14 md:ml-64 grid gap-y-2">
           <span className="font-semibold md:text-lg">{user && user.name}</span>
-          {/* {user && user.followers.length !== 1 && 
-          <span className="text-sm text-gray-500">
-            Followed by <a className="font-bold"></a>,
-            <a className="font-bold"></a> + more
-          </span>
-          } */}
         </div>
         <div className="md:hidden mt-7 flex justify-around text-sm text-center border-t py-3">
           <span className="text-gray-600 w-1/3 ">
-            <b className="font-semibold">{posts && posts.length}</b>
+            <b className="font-semibold">{userPosts && userPosts.length}</b>
             <br /> posts
           </span>
           <span className="text-gray-600 w-1/3" onClick={showFollowers}>
@@ -130,8 +127,9 @@ function Profile() {
             <span className="hidden md:inline">POSTS</span>
           </a>
         </div>
+        {userPosts && currentUser && <InfiniteScroll scrollThreshold={"10px"} style={{"overflowY":"hidden"}} dataLength={userPosts.totalDocs} next={()=>{dispatch(fetchUserPosts(currentUser._id,userPosts.nextPage)).then(()=>{});}} hasMore={userPosts.hasNextPage}>
         <div className="flex flex-wrap ">
-          {posts && posts.map((post) => {
+          {userPosts.docs.map((post) => {
             return (
               <div className="w-1/3 p-px md:px-3 md:pb-6 group cursor-pointer" key={post._id}>
                 <Link to={`/post/${post._id}`}>
@@ -152,6 +150,7 @@ function Profile() {
               })
               }
         </div>
+        </InfiniteScroll>}
       </div>
     </div>
     </>

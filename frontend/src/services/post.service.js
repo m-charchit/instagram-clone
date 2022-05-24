@@ -3,8 +3,9 @@ import { headers } from "../constant/header";
 const API_URL = "http://localhost:5000/api/post/";
 
 
-const fetchPosts = () => {
+const fetchPosts = (page) => {
     return axios.get(API_URL+"fetch",{
+        params:{page},
         headers:headers()
     })
     .then((response) => {
@@ -21,8 +22,8 @@ const fetchPost = (postId) => {
     })
 }
 
-const fetchUserPosts = (userId) => {
-    return axios.post(API_URL+"fetchUserPosts",{userId})
+const fetchUserPosts = (userId,page) => {
+    return axios.post(API_URL+"fetchUserPosts",{userId,page})
     .then((response) => {
         return response.data
     })
