@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {logout} from "../state/Actions/auth"
 import { getCurrentUser } from "../state/Actions/user";
+import Spinner from "./Spinner";
 
 function Navbar() {
   const dispatch = useDispatch()
@@ -61,7 +62,7 @@ function Navbar() {
               <div className=" h-4 w-4 bg-white rotate-45 transform origin-bottom-left border-gray-300 border"></div>
             </div>
             <div className="w-full flex-col flex overflow-auto overflow-x-hidden whitespace-nowrap">
-            {progress ?  <p className="m-auto">Loading..</p> : 
+            {progress ?  <div className="m-auto"><Spinner/></div> : 
             userList.length !== 0 ? userList.map((user)=>{
               return (
                   <Link to={`/profile/${user.username}`} key={user._id}>

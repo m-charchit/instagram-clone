@@ -13,7 +13,9 @@ const user = (state={},action) => {
         case "GET_USER_SUCCESS":
             return {
                 ...state,
-                user:action.payload.user
+                user:action.payload.user,
+                users:undefined
+
             }
         case "GET_USER_FAIL":
             return {
@@ -24,7 +26,8 @@ const user = (state={},action) => {
             return {
                 ...state,
                 currentUser:action.payload.followingUser,
-                user:action.payload.user
+                user:action.payload.user,
+                users:undefined
             }
         case "FOLLOW_ACTION_FAIL":
             return {

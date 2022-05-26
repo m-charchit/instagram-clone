@@ -5,7 +5,7 @@ const FetchUser = require("../middleware/FetchUser");
 const Post = require("../models/Post");
 
 const options = {
-  limit: 1,
+  limit: 2,
   select:"-_v",
   populate:[{path:"user",select:"_id username"},{path:"like",select:"_id username name"},
   {path:"comments.user",select:"_id username"}]
@@ -40,7 +40,11 @@ router.post("/fetchUserPosts",async (req,res) => {
     const {userId,page} = req.body
     console.log(userId,page)
     // @ts-ignore
-    const posts = await Post.paginate({user:userId},{limit:3,select:"_id like comments",page:page})
+    const posts = await Post.paginate({user:userId},{limit:3,select:"_id like comments",page:page,lean:true})
+    posts.docs.forEach((e)=>{
+      e.comments = e.comments.length
+      e.like = e.like.length
+    })
     res.json(posts)
     // @ts-ignore
   } catch (error) {
@@ -145,6 +149,7 @@ router.post("/deleteComment",FetchUser,async(req,res)=>{
     try {
       const {commentId} = req.body    
       // @ts-ignore
+      // const posts = await Post.findOneAndUpdate({"comments._id":commentId},{$set:{comments:[]}},{new:true})
       const post = await Post.findOne({"comments.user":req.user.id,"comments._id":commentId},{"comments.$":1})
       const a = await getId(post.comments,[])
       // @ts-ignore
@@ -174,4 +179,11 @@ FetchUser,async( req, res )=>{
     res.status(500).send("Internal Server Error");
   }
 })
+let a = []
+a.push({comments:[{d:"s"},{d:"d"}]})
+a.push({comments:[{d:"s"},{d:"g"},{d:"w"}]})
+a.forEach((item)=>{
+  item.comments = item.comments.length
+})
+console.log(a)
 module.exports = router;
