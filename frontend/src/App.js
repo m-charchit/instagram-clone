@@ -44,9 +44,7 @@ function App() {
           <Route path="upload" element={<UploadPost />} />
         </Route>
         <Route element={<ProtectedRoute />}>
-          <Route path="post">
-          <Route path=":postId" element={<Post />} />
-          <Route path="" element={<NotFound />} />
+          <Route path="/post/:postId" element={<Post />}>
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
