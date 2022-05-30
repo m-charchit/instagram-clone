@@ -56,7 +56,7 @@ function Login() {
       <div className="flex px-8 md:px-20 py-5 border bg-white items-center">
         <span>
           Don't have an account?{" "}
-          <Link to="register" className="font-semibold text-blue-400">
+          <Link to="/register" className="font-semibold text-blue-400">
             Sign up
           </Link>
         </span>

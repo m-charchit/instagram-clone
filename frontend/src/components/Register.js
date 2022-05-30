@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { register } from "../state/Actions/auth";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 function Register() {
   const [cred,setCred] = useState({username:"",email:"",name:"",password:""})
@@ -70,9 +70,9 @@ function Register() {
       <div className="flex px-14 md:px-24 py-5 border bg-white items-center">
         <span>
           Have an account ?{" "}
-          <a href="" className="font-semibold text-blue-400">
+          <Link to="/login" className="font-semibold text-blue-400">
             Log In
-          </a>
+          </Link>
         </span>
       </div>
     </div>

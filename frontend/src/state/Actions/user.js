@@ -15,8 +15,8 @@ export const getCurrentUser = () => (dispatch) => {
         })
     })
 }
-export const getUser = (username) => (dispatch) => {
-    return UserService.getUser(username)
+export const getUser = (username,followType,page) => (dispatch) => {
+    return UserService.getUser(username,followType,page)
     .then((userData)=>{
         dispatch({
             type:"GET_USER_SUCCESS",

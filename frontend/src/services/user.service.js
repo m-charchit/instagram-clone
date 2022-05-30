@@ -12,9 +12,11 @@ const getCurrentUser = () => {
     })
 }
 
-const getUser = (username) => {
+const getUser = (username,followType,page=1) => {
     return axios.post(API_URL+"getUser",{
-        username
+        username,
+        page,
+        followType
     })
     .then((response)=>{
         return response.data

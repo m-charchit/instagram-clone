@@ -20,13 +20,36 @@ router.post('/getCurrentUser', FetchUser ,async (req, res) => {
 
 router.post("/getUser",async(req,res)=>{
     try {
-        const {username} = req.body
-        const user = await User.findOne({username})
-        .populate("followers","_id username name").populate("followings","_id username name")
-        .select("-password -__v -email -date")
-        res.json(user)
+        const {username,followType, page } = req.body
+        let limit = 2
+        const totalDocs = await User.aggregate([
+            {$match:{username}},
+            {$project: {_id: 0, dataSize: {$size: `$${followType}`}}}
+        ])
+        console.log(page)
 
-        
+        let hasNextPage = (Math.ceil(totalDocs[0].dataSize / limit) || 1) > page
+        let details = {
+            nextPage:hasNextPage ? page+1 : null,
+            hasNextPage,
+            totalDocs:totalDocs[0]
+        }
+        const user = await User.findOne({username}).populate(
+        [{
+            path: followType,
+            select:"_id username name",
+            options:{
+                skip:(page-1)*limit,limit
+            }
+        },{
+            path: followType,
+            select:"_id username name",
+            options:{
+                skip:(page-1)*limit,limit
+            }
+        }]
+        ).select("-password -__v -email -date")
+        res.json({...user.toObject(),...details})
     } catch (error) {
         console.log(error)
         res.status(500).send("Internal Server Error")
@@ -34,8 +57,8 @@ router.post("/getUser",async(req,res)=>{
 })
 
 router.post("/checkFollow",FetchUser, async (req,res)=>{
+    const {userId} = req.body
     try {
-        const {userId} = req.body
         // @ts-ignore
         const user = await User.findOne({_id:req.user.id,followings:userId})
         console.log(user)

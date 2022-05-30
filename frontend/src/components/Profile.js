@@ -52,17 +52,18 @@ function Profile() {
   } else if (user) {
     return (
       <>
-        {showFollowerElem && user.followers.length !== 0 && (
+        {showFollowerElem && user.totalDocs.followerSize !== 0 && (
           <UserDialog
             title="Followers"
             hideElem={setShowFollowerElem}
-            data={user && user.followers}
+            data={user}
             data2={currentUser && currentUser.followings}
             followAction={followAction}
             crUsername={currentUser.username}
+            infiScrollData={{}}
           />
         )}
-        {showFollowingElem && user.followings.length !== 0 && (
+        {showFollowingElem && user.totalDocs.followingSize !== 0 && (
           <UserDialog
             title="Followings"
             hideElem={setShowFollowingElem}
@@ -139,7 +140,7 @@ function Profile() {
                     onClick={showFollowers}
                   >
                     <b className="font-semibold mr-1">
-                      {user && user.followers.length}
+                      {user && user.totalDocs.followerSize}
                     </b>{" "}
                     followers
                   </span>
@@ -148,7 +149,7 @@ function Profile() {
                     onClick={showFollowings}
                   >
                     <b className="font-semibold mr-1">
-                      {user && user.followings.length}
+                      {user && user.totalDocs.followingSize}
                     </b>{" "}
                     following
                   </span>
@@ -168,12 +169,12 @@ function Profile() {
                 <br /> posts
               </span>
               <span className="text-gray-600 w-1/3" onClick={showFollowers}>
-                <b className="font-semibold">{user && user.followers.length}</b>
+                <b className="font-semibold">{user && user.totalDocs.followerSize}</b>
                 <br /> followers
               </span>
               <span className="text-gray-600 w-1/3" onClick={showFollowings}>
                 <b className="font-semibold ">
-                  {user && user.followings.length}
+                  {user && user.totalDocs.followingSize}
                 </b>{" "}
                 <br /> following
               </span>
