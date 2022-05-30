@@ -15,7 +15,7 @@ router.get("/fetch", FetchUser ,  async (req, res) => {
   try {
     console.log(req.query.page)
     // @ts-ignore
-    const posts = await Post.paginate({user:{$in:[req.user.followings,req.user.id]}},{...options,page:req.query.page})
+    const posts = await Post.paginate({user:{$in:[...req.user.followings,req.user.id]}},{...options,page:req.query.page})
     res.json(posts)
   } catch (error) {
     console.log(error);

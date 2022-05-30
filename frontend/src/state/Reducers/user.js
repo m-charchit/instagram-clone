@@ -41,9 +41,11 @@ const user = (state={},action) => {
         case "GET_FOLLOWS_SUCCESS":
             if(state.user.followers && state.user.followings){
                 if (action.payload.followers){
-                    action.payload.followers.docs = state.user.followers.nextPage !== action.payload.followers.nextPage ? [...state.user.followers.docs,...action.payload.followers.docs] : action.payload.followers.docs
+                    action.payload.followers.docs = action.payload.followers.currentPage !== 1 ? (state.user.followers.nextPage !== action.payload.followers.nextPage ?
+                    [...state.user.followers.docs,...action.payload.followers.docs] : state.user.followers.docs) : action.payload.followers.docs
                 }else {
-                    action.payload.followings.docs = state.user.followings.nextPage !== action.payload.followings.nextPage ? [...state.user.followings.docs,...action.payload.followings.docs] : action.payload.followers.docs
+                    action.payload.followings.docs = action.payload.followings.currentPage !== 1 ? (state.user.followings.nextPage !== action.payload.followings.nextPage ?
+                        [...state.user.followings.docs,...action.payload.followings.docs] : state.user.followings.docs) : action.payload.followings.docs
     
                 }
             }

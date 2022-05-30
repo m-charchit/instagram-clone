@@ -38,15 +38,19 @@ function Profile() {
 
   const followAction = (type, userId = user._id) => {
     dispatch(followActions(userId, type, user._id)).then(() => {
-      dispatch(checkFollow(user._id));
+      dispatch(getFollows(user._id,"followers",user.followers.currentPage))
+      dispatch(getFollows(user._id,"followings",user.followings.currentPage))
     });
   };
 
   const showFollowers = () => {
-    setShowFollowerElem(true);
+    setShowFollowingElem(false);
+    setShowFollowerElem(user.followers.totalDocs !== 0);
   };
   const showFollowings = () => {
-    setShowFollowingElem(true);
+    setShowFollowerElem(false);
+    setShowFollowingElem(user.followings.totalDocs !== 0);
+
   };
 
   if (user === null) {

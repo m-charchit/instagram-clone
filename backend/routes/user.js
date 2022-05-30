@@ -32,7 +32,8 @@ const paginate = async (userId,page,followType) => {
         let details = {
             nextPage:hasNextPage ? page+1 : null,
             hasNextPage,
-            totalDocs:totalDocs[0].dataSize
+            totalDocs:totalDocs[0].dataSize,
+            currentPage:page
         }
         const follow_ers_ing = await User.findById(userId).populate(
         [{
