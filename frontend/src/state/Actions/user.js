@@ -15,8 +15,8 @@ export const getCurrentUser = () => (dispatch) => {
         })
     })
 }
-export const getUser = (username,followType,page) => (dispatch) => {
-    return UserService.getUser(username,followType,page)
+export const getUser = (username) => (dispatch) => {
+    return UserService.getUser(username)
     .then((userData)=>{
         dispatch({
             type:"GET_USER_SUCCESS",
@@ -30,6 +30,22 @@ export const getUser = (username,followType,page) => (dispatch) => {
         })
     })
 }
+export const getFollows = (userId,followType,page) => (dispatch) => {
+    return UserService.fetchFollows(userId,followType,page)
+    .then((data)=>{
+        dispatch({
+            type:"GET_FOLLOWS_SUCCESS",
+            payload:data
+        })
+        return data
+    })
+    .catch((error)=>{
+        dispatch({
+            type:"GET_FOLLOWS_ERROR",
+        })
+    })
+}
+
 
 export const followActions = (userId,type,pUserId) => (dispatch) => {
     return UserService.followActions(userId,type,pUserId)

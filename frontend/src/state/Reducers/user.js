@@ -26,7 +26,7 @@ const user = (state={},action) => {
             return {
                 ...state,
                 currentUser:action.payload.followingUser,
-                user:action.payload.user,
+                user:{...state.user,...action.payload.user},
                 users:undefined
             }
         case "FOLLOW_ACTION_FAIL":
@@ -37,6 +37,19 @@ const user = (state={},action) => {
             return {
                 ...state,
                 user:{...state.user,...action.payload}
+            }
+        case "GET_FOLLOWS_SUCCESS":
+            if(state.user.followers && state.user.followings){
+                if (action.payload.followers){
+                    action.payload.followers.docs = state.user.followers.nextPage !== action.payload.followers.nextPage ? [...state.user.followers.docs,...action.payload.followers.docs] : action.payload.followers.docs
+                }else {
+                    action.payload.followings.docs = state.user.followings.nextPage !== action.payload.followings.nextPage ? [...state.user.followings.docs,...action.payload.followings.docs] : action.payload.followers.docs
+    
+                }
+            }
+            return {
+                ...state,
+                user: {...state.user,...action.payload}
             }
         case "FOLLOW_CHECK_FAIL":
             return {

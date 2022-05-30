@@ -17,39 +17,52 @@ router.post('/getCurrentUser', FetchUser ,async (req, res) => {
         res.status(500).send("Internal Server Error")
     }
 })
-
-router.post("/getUser",async(req,res)=>{
-    try {
-        const {username,followType, page } = req.body
-        let limit = 2
+const paginate = async (userId,page,followType) => {
+    let limit = 2
+    userId = mongoose.Types.ObjectId(userId)
+    console.log(userId)
         const totalDocs = await User.aggregate([
-            {$match:{username}},
+            {$match:{_id:userId}},
             {$project: {_id: 0, dataSize: {$size: `$${followType}`}}}
         ])
+        console.log(totalDocs)
         console.log(page)
 
         let hasNextPage = (Math.ceil(totalDocs[0].dataSize / limit) || 1) > page
         let details = {
             nextPage:hasNextPage ? page+1 : null,
             hasNextPage,
-            totalDocs:totalDocs[0]
+            totalDocs:totalDocs[0].dataSize
         }
-        const user = await User.findOne({username}).populate(
+        const follow_ers_ing = await User.findById(userId).populate(
         [{
             path: followType,
             select:"_id username name",
             options:{
                 skip:(page-1)*limit,limit
             }
-        },{
-            path: followType,
-            select:"_id username name",
-            options:{
-                skip:(page-1)*limit,limit
-            }
         }]
-        ).select("-password -__v -email -date")
-        res.json({...user.toObject(),...details})
+        ).select(followType)
+        let result = {}
+        result[followType] = {docs:follow_ers_ing[followType],...details}
+        return result
+        
+}
+router.post("/getFollows",async(req,res)=>{
+    try {
+        const {userId,page,followType} = req.body
+        const data = await paginate(userId,page,followType)
+        res.json(data)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Internal Server Error")
+    }
+})
+router.post("/getUser",async(req,res)=>{
+    try {
+        const {username} = req.body
+        const user = await User.findOne({username}).select("_id username name")
+        res.json(user)
     } catch (error) {
         console.log(error)
         res.status(500).send("Internal Server Error")
@@ -124,11 +137,10 @@ router.post("/follow",FetchUser,async (req,res)=>{
         // @ts-ignore
         const followingUser = await User.findByIdAndUpdate(req.user.id,{$addToSet:{followings:userId}},{new:true})
         .populate("followers","_id username name").populate("followings","_id username name")
-        .select("-password -_v -date")
+        .select("_id username name")
 
         const user = await User.findById(pUserId)
-        .populate("followers","_id username name").populate("followings","_id username name")
-        .select("-password -__v -email -date")
+        .select("_id username name")
 
         res.json({followingUser,user})
     }   else {
@@ -148,13 +160,13 @@ router.post("/unfollow",FetchUser,async (req,res)=>{
             // @ts-ignore
         const followedUser = await User.findByIdAndUpdate(userId,{$pull:{followers:req.user.id}})
         
+        
         // @ts-ignore
         const followingUser = await User.findByIdAndUpdate(req.user.id,{$pull:{followings:userId}},{new:true})
         .populate("followers","_id username name").populate("followings","_id username name")
-        .select("-password -_v -date")
+        .select("_id username name")
         const user = await User.findById(pUserId)
-        .populate("followers","_id username name").populate("followings","_id username name")
-        .select("-password -__v -email -date")
+        .select("_id username name")
         res.json({followingUser,user})
     } else {
         res.status(401).send("Not Allowed")

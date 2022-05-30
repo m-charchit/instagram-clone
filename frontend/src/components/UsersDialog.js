@@ -4,10 +4,11 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import LoadingBar from 'react-topbar-progress-indicator'
-import { getUser } from '../state/Actions/user'
+import { getFollows } from '../state/Actions/user'
 
 function UserDialog(props) {
-  const {title,hideElem,data,followAction,data2,crUsername} = props
+  const {title,hideElem,user,followAction,data2,crUsername} = props
+  const data =  user[title.toLowerCase()]
   const [progress, setProgress] = useState(true)
   const dispatch = useDispatch()
 
@@ -44,7 +45,7 @@ function UserDialog(props) {
   
   return (
     <div className='fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-30 backdrop-brightness-50' style={{"margin":"0px"}}>
-      { progress && <LoadingBar/>}
+      
         <div className="bg-white border rounded-xl w-96 overflow-auto  animate-showModal ">
             <div className='relative my-2 font-semibold flex justify-center items-center'>
                 <p className='w-full text-center '>{title}</p>
@@ -52,13 +53,12 @@ function UserDialog(props) {
             </div>
             <hr />
             <div id='scrollTarget' className='h-20 overflow-auto'>
-              {console.log(data.nextPage)}
-            <InfiniteScroll 
+            { user && data  && <InfiniteScroll 
             scrollThreshold={"10px"}
             style={{ overflowY: "hidden" }}
-            dataLength={data.followers.length}
+            dataLength={data.docs.length}
             next={() => {
-              dispatch(getUser(data.username,data.nextPage)).then(() => {
+              dispatch(getFollows(user._id,title.toLowerCase(),data.nextPage)).then(() => {
                 // setloading(false);console.log("S")
               });
               // setloading(true);
@@ -66,7 +66,7 @@ function UserDialog(props) {
             hasMore={data.hasNextPage}
             scrollableTarget={"scrollTarget"}
             >
-            {data && data.followers.map((item)=>{
+            { data.docs.map((item)=>{
             return (<div className="flex flex-col mx-4 mt-2 space-y-1 mb-1" key={item._id}>
                 <div className="flex space-x-3 items-center">
                 <img src="/default.jpg" alt="" className="w-9 h-9 rounded-full"/>
@@ -78,7 +78,8 @@ function UserDialog(props) {
                 </div>
             </div>)
             })}
-            </InfiniteScroll>
+            </InfiniteScroll>}
+            { progress && <LoadingBar/>}
             </div>
         </div>
     </div>

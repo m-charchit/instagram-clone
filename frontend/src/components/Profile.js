@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { fetchUserPosts } from "../state/Actions/post";
-import { checkFollow, followActions, getUser } from "../state/Actions/user";
+import { checkFollow, followActions, getFollows, getUser } from "../state/Actions/user";
 import UserDialog from "./UsersDialog";
 import NotFound from "./NotFound";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -23,6 +23,8 @@ function Profile() {
 
   useEffect(() => {
     dispatch(getUser(username)).then((user) => {
+      dispatch(getFollows(user._id,"followers"))
+      dispatch(getFollows(user._id,"followings"))
       dispatch(checkFollow(user._id));
       userPosts
         ? setloading(false)
@@ -52,22 +54,21 @@ function Profile() {
   } else if (user) {
     return (
       <>
-        {showFollowerElem && user.totalDocs.followerSize !== 0 && (
+        {showFollowerElem && user.followers.totalDocs !== 0 && (
           <UserDialog
             title="Followers"
             hideElem={setShowFollowerElem}
-            data={user}
+            user={user}
             data2={currentUser && currentUser.followings}
             followAction={followAction}
             crUsername={currentUser.username}
-            infiScrollData={{}}
           />
         )}
-        {showFollowingElem && user.totalDocs.followingSize !== 0 && (
+        {showFollowingElem && user.followings.totalDocs !== 0 && (
           <UserDialog
             title="Followings"
             hideElem={setShowFollowingElem}
-            data={user && user.followings}
+            user={user}
             data2={currentUser && currentUser.followings}
             followAction={followAction}
             crUsername={currentUser.username}
@@ -109,7 +110,7 @@ function Profile() {
                         >
                           Message
                         </a>
-                        {user && user.followingUser ? (
+                        {user && user.followings && user.followingUser ? (
                           <button
                             className="bg-blue-500 px-4 py-1 rounded"
                             onClick={() => followAction("unfollow")}
@@ -140,7 +141,7 @@ function Profile() {
                     onClick={showFollowers}
                   >
                     <b className="font-semibold mr-1">
-                      {user && user.totalDocs.followerSize}
+                      {user && user.followers && user.followers.totalDocs}
                     </b>{" "}
                     followers
                   </span>
@@ -149,7 +150,7 @@ function Profile() {
                     onClick={showFollowings}
                   >
                     <b className="font-semibold mr-1">
-                      {user && user.totalDocs.followingSize}
+                      {user && user.followings && user.followings.totalDocs}
                     </b>{" "}
                     following
                   </span>
@@ -169,12 +170,12 @@ function Profile() {
                 <br /> posts
               </span>
               <span className="text-gray-600 w-1/3" onClick={showFollowers}>
-                <b className="font-semibold">{user && user.totalDocs.followerSize}</b>
+                <b className="font-semibold">{user && user.followers && user.followers.totalDocs}</b>
                 <br /> followers
               </span>
               <span className="text-gray-600 w-1/3" onClick={showFollowings}>
                 <b className="font-semibold ">
-                  {user && user.totalDocs.followingSize}
+                  {user && user.followings && user.followings.totalDocs}
                 </b>{" "}
                 <br /> following
               </span>

@@ -179,11 +179,4 @@ FetchUser,async( req, res )=>{
     res.status(500).send("Internal Server Error");
   }
 })
-let a = []
-a.push({comments:[{d:"s"},{d:"d"}]})
-a.push({comments:[{d:"s"},{d:"g"},{d:"w"}]})
-a.forEach((item)=>{
-  item.comments = item.comments.length
-})
-console.log(a)
 module.exports = router;

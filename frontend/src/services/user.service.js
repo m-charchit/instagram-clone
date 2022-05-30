@@ -12,11 +12,9 @@ const getCurrentUser = () => {
     })
 }
 
-const getUser = (username,followType,page=1) => {
+const getUser = (username) => {
     return axios.post(API_URL+"getUser",{
         username,
-        page,
-        followType
     })
     .then((response)=>{
         return response.data
@@ -50,6 +48,18 @@ const checkFollow = (userId) => {
     })
 }
 
+const fetchFollows = (userId,followType,page=1) => {
+    return axios.post(API_URL+"getFollows",{
+        userId,
+        page,
+        followType
+    },
+    )
+    .then((response)=>{
+        return response.data
+    })
+}
+
 const getSuggestedUsers = () => {
     return axios.get(API_URL+"getSuggestedUsers",
     {
@@ -67,7 +77,8 @@ const exportedObject = {
     getUser,
     followActions,
     checkFollow,
-    getSuggestedUsers
+    getSuggestedUsers,
+    fetchFollows
 }
 
 export default exportedObject
