@@ -18,6 +18,24 @@ export const fetchPosts = (page) => (dispatch) => {
         }
     )
 }
+export const getLikes = (postId,page) => (dispatch) => {
+    
+    return PostService.fetchLikes(postId,page).then(
+        (data)=>{
+            dispatch({
+                type:"FETCH_LIKES",
+                payload:data
+            })
+            return Promise.resolve
+        },
+        (error)=>{
+            dispatch({
+                type:"FETCH_POSTS_FAIL"
+            })
+            return Promise.reject
+        }
+    )
+}
 
 export const organizeComments = (post) => (dispatch) => {
     post.comments.forEach((e)=>{

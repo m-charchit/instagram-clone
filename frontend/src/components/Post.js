@@ -91,11 +91,11 @@ function Post() {
   };
   return (
     <>
-      {showLikeElem && post && currentUser && post.like.length !== 0 && (
+      {showLikeElem && post && currentUser && post.like.docs.length !== 0 && (
         <UserDialog
           title="Likes"
           hideElem={setShowLikeElem}
-          data={post.like}
+          data={post.like.docs}
           data2={currentUser.followings}
           followAction={followAction}
           crUsername={currentUser.username}
@@ -236,9 +236,9 @@ function Post() {
                   <i
                     className={`${
                       post &&
-                      post.like.length !== 0 &&
+                      post.like.docs.length !== 0 &&
                       currentUser &&
-                      post.like.findIndex(
+                      post.like.docs.findIndex(
                         ({ _id }) => _id === currentUser._id
                       ) !== -1
                         ? "fas text-red-500"
@@ -258,7 +258,7 @@ function Post() {
                 <p className="font-thin">
                   Liked by{" "}
                   <button className="font-semibold" onClick={showElem}>
-                    {post.like.length} users
+                    {post.like.docs.length} users
                   </button>
                 </p>
               ) : (

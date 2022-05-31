@@ -4,6 +4,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import LoadingBar from 'react-topbar-progress-indicator'
+import { getLikes } from '../state/Actions/post'
 import { getFollows } from '../state/Actions/user'
 
 function UserDialog(props) {
@@ -58,7 +59,7 @@ function UserDialog(props) {
             style={{ overflowY: "hidden" }}
             dataLength={data.docs.length}
             next={() => {
-              dispatch(getFollows(user._id,title.toLowerCase(),data.nextPage)).then(() => {
+              dispatch(title === "Like" ?getLikes(user._id,title.toLowerCase(),data.nextPage) :getFollows(user._id,title.toLowerCase(),data.nextPage)).then(() => {
                 // setloading(false);console.log("S")
               });
               // setloading(true);

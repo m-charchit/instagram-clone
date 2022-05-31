@@ -1,8 +1,9 @@
 const express = require('express');
-const { default: mongoose } = require('mongoose');
 const router = express.Router();
 const FetchUser = require("../middleware/FetchUser");
+const mongoose  = require("mongoose");
 const User = require('../models/User');
+const paginate = require("../functions/PaginateSD")
 
 router.post('/getCurrentUser', FetchUser ,async (req, res) => {
 
@@ -17,42 +18,11 @@ router.post('/getCurrentUser', FetchUser ,async (req, res) => {
         res.status(500).send("Internal Server Error")
     }
 })
-const paginate = async (userId,page,followType) => {
-    let limit = 2
-    userId = mongoose.Types.ObjectId(userId)
-    console.log(userId)
-        const totalDocs = await User.aggregate([
-            {$match:{_id:userId}},
-            {$project: {_id: 0, dataSize: {$size: `$${followType}`}}}
-        ])
-        console.log(totalDocs)
-        console.log(page)
 
-        let hasNextPage = (Math.ceil(totalDocs[0].dataSize / limit) || 1) > page
-        let details = {
-            nextPage:hasNextPage ? page+1 : null,
-            hasNextPage,
-            totalDocs:totalDocs[0].dataSize,
-            currentPage:page
-        }
-        const follow_ers_ing = await User.findById(userId).populate(
-        [{
-            path: followType,
-            select:"_id username name",
-            options:{
-                skip:(page-1)*limit,limit
-            }
-        }]
-        ).select(followType)
-        let result = {}
-        result[followType] = {docs:follow_ers_ing[followType],...details}
-        return result
-        
-}
 router.post("/getFollows",async(req,res)=>{
     try {
         const {userId,page,followType} = req.body
-        const data = await paginate(userId,page,followType)
+        const data = await paginate(User,userId,page,followType)
         res.json(data)
     } catch (error) {
         console.log(error)

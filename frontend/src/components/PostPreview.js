@@ -59,7 +59,7 @@ function PostPreview({ post }) {
       {showOptionDialog && (
         <OptionDialog hideElem={setShowOptionDialog} buttonData={buttonData} />
       )}
-      {showLikeElem && post.like.length !== 0 && (
+      {showLikeElem && post.like.docs.length !== 0 && (
         <UserDialog
           title="Like"
           hideElem={setShowLikeElem}
@@ -90,9 +90,9 @@ function PostPreview({ post }) {
             <div className="flex space-x-3 float-left">
               <i
                 className={`${
-                  post.like.length !== 0 &&
+                  post.like.docs.length !== 0 &&
                   currentUser &&
-                  post.like.findIndex(({ _id }) => _id === currentUser._id) !==
+                  post.like.docs.findIndex(({ _id }) => _id === currentUser._id) !==
                     -1
                     ? "fas text-red-500"
                     : "far"
@@ -115,7 +115,7 @@ function PostPreview({ post }) {
                 setShowLikeElem(true);
               }}
             >
-              {post.like.length} users
+              {post.like.docs.length} users
             </button>
           </p>
           <p className="text-gray-600">

@@ -19,7 +19,7 @@ const returnData = (state,action) => {
         return {
             ...state,
             posts:state.posts,
-            userPosts:state.userPosts 
+            userPosts:state.userPosts
     } 
     }
         return {
@@ -37,6 +37,12 @@ const post = (state={},action) => {
             return {
                 ...state,
                 posts: reverseComments(state.posts  && state.posts.page !== action.payload.posts.page ?  {...action.payload.posts,docs:[...state.posts.docs, ...action.payload.posts.docs]} : action.payload.posts)
+            }
+        case "FETCH_LIKES" :
+            state.posts.docs[state.posts.docs.findIndex(({_id})=>_id === action.payload.post._id)] = {...action.payload.post,like:action.payload}
+            return {
+                ...state,
+                posts: state.posts
             }
         case "FETCH_POST_SUCCESS" :
             return {

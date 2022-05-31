@@ -29,8 +29,15 @@ const fetchUserPosts = (userId,page) => {
     })
 }
 
+const fetchLikes = (postId,page) => {
+    return axios.post(API_URL+"fetchLikes",{postId,page})
+    .then((response) => {
+        return response.data
+    })
+}
+
 const uploadPost = (caption) => {
-    return axios.post(API_URL + "upload",{
+        return axios.post(API_URL + "upload",{
         caption
     },
     {
@@ -104,7 +111,8 @@ const exportedObject = {
     deletePost,
     addComment,
     deleteComment,
-    fetchPost
+    fetchPost,
+    fetchLikes
 }
 
 export default exportedObject

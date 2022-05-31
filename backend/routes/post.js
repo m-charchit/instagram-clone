@@ -3,19 +3,25 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const FetchUser = require("../middleware/FetchUser");
 const Post = require("../models/Post");
+const paginate = require("../functions/PaginateSD")
 
 const options = {
   limit: 2,
-  select:"-_v",
+  select:"-_v -like -id",
   populate:[{path:"user",select:"_id username"},{path:"like",select:"_id username name"},
-  {path:"comments.user",select:"_id username"}]
+  {path:"comments.user",select:"_id username"}],
 };
 
 router.get("/fetch", FetchUser ,  async (req, res) => {
   try {
     console.log(req.query.page)
     // @ts-ignore
-    const posts = await Post.paginate({user:{$in:[...req.user.followings,req.user.id]}},{...options,page:req.query.page})
+    const posts = await Post.paginate({user:{$in:[...req.user.followings,req.user.id]}},{...options,page:req.query.page,lean:true})
+   await Promise.all(posts.docs.map(async (e,i) => {
+  let b = await paginate(Post,e._id,1,"like")
+      posts.docs[i] = {...e,...b}
+      
+}))
     res.json(posts)
   } catch (error) {
     console.log(error);
@@ -23,11 +29,23 @@ router.get("/fetch", FetchUser ,  async (req, res) => {
   }
 });
 
+
+router.post("/fetchLikes",FetchUser,async (req,res)=> {
+  try {
+    const {postId,page} = req.body
+    const data = await paginate(Post,postId,page,"like")
+    res.json(data)
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+})
+
 router.post("/fetchPost",FetchUser, async (req,res) => {
   try {
     const {postId} = req.body
     const post = await Post.findById(postId)
-    .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+    .populate("user","_id username").populate("comments.user","_id username").select("-_v")
     res.json(post)
   } catch (error) {
     console.log(error);
@@ -74,7 +92,7 @@ router.post("/like", FetchUser, async (req, res) => {
     if(findPost){
       // @ts-ignore
       const likedPost = await Post.findByIdAndUpdate(postId,{$pull:{like:req.user.id}},{new:true})
-      .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+      .populate("user","_id username").populate("comments.user","_id username").select("-_v")
     res.json(likedPost);
 
     }
@@ -84,7 +102,7 @@ router.post("/like", FetchUser, async (req, res) => {
       // @ts-ignore
       { $addToSet: { like: req.user.id } },
       { new: true }
-    ).populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+    ).populate("user","_id username").populate("comments.user","_id username").select("-_v")
     res.json(likedPost);
     }
     
@@ -112,7 +130,7 @@ router.post("/delete",FetchUser,async (req,res)=>{
     // @ts-ignore
     console.log(await Post.findOneAndDelete({_id:postId,user:req.user.id}))
     const posts = await Post.find({user:{$in:[req.user.followings,req.user.id]}})
-    .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+    .populate("user","_id username").populate("comments.user","_id username").select("-_v")
     res.json(posts);
   } catch (error) {
     console.log(error);
@@ -154,7 +172,7 @@ router.post("/deleteComment",FetchUser,async(req,res)=>{
       const a = await getId(post.comments,[])
       // @ts-ignore
       const posts = await Post.findOneAndUpdate({"comments.user":req.user.id,"comments._id":commentId},{$pull:{"comments":{_id:a}}},{new:true})
-      .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+      .populate("user","_id username").populate("comments.user","_id username").select("-_v")
       res.json(posts)
     } catch (error) {
       console.log(error);
@@ -172,7 +190,7 @@ FetchUser,async( req, res )=>{
     }
     const {com,postId,parentCommentId} = req.body
     const post = await Post.findByIdAndUpdate(postId,{$push: {comments:{comment:com,parentComment:parentCommentId,post:postId,user:req.user.id}}},{new:true})
-    .populate("user","_id username").populate("like","_id username name").populate("comments.user","_id username").select("-_v")
+    .populate("user","_id username").populate("comments.user","_id username").select("-_v")
     res.json(post)
   } catch (error) {
     console.log(error);
