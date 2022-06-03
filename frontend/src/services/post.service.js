@@ -22,6 +22,15 @@ const fetchPost = (postId) => {
     })
 }
 
+const checkLike = (postId) => {
+    return axios.post(API_URL+"checkLike",{postId},{
+        headers:headers()
+    })
+    .then((response) => {
+        return response.data
+    })
+}
+
 const fetchUserPosts = (userId,page) => {
     return axios.post(API_URL+"fetchUserPosts",{userId,page})
     .then((response) => {
@@ -30,7 +39,7 @@ const fetchUserPosts = (userId,page) => {
 }
 
 const fetchLikes = (postId,page) => {
-    return axios.post(API_URL+"fetchLikes",{postId,page})
+    return axios.post(API_URL+"fetchLikes",{postId,page},{headers:headers()})
     .then((response) => {
         return response.data
     })
@@ -48,9 +57,9 @@ const uploadPost = (caption) => {
     })
 }
 
-const likePost = (postId) => {
+const likePost = (postId,page) => {
     return axios.post(API_URL+"like",{
-        postId
+        postId,page
     },
     {
         headers:headers()
@@ -112,7 +121,8 @@ const exportedObject = {
     addComment,
     deleteComment,
     fetchPost,
-    fetchLikes
+    fetchLikes,
+    checkLike
 }
 
 export default exportedObject

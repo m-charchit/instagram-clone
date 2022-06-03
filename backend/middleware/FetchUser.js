@@ -3,9 +3,11 @@ const User = require("../models/User")
 const JWT_STRING = "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
 const fetchUser = async (req,res,next)=>{
+    console.log(req.header("auth-token"))
     const token = req.header("auth-token");
     if(!token){
-        res.status(401).send({error:"Please authenticate using a valid token"})
+        console.log("sfe")
+        return res.status(401).send({error:"Please authenticate using a valid token"})
     }
     try {
         const data = jwt.verify(token , JWT_STRING)

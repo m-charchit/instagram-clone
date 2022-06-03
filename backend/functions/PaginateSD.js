@@ -9,7 +9,7 @@ const paginate = async (Model,id,page,type) => {
             {$match:{_id:id}},
             {$project: {_id: 0, dataSize: {$size: `$${type}`}}}
         ])
-        
+
         let hasNextPage = (Math.ceil(totalDocs[0].dataSize / limit) || 1) > page
         let details = {
             nextPage:hasNextPage ? page+1 : null,

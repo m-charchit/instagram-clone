@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { addComment, deletePost, likePost } from "../state/Actions/post";
+import { addComment, checkLike, deletePost, likePost } from "../state/Actions/post";
 import { followActions } from "../state/Actions/user";
 import OptionDialog from "./OptionDialog";
 import UserDialog from "./UsersDialog";
@@ -14,6 +14,10 @@ function PostPreview({ post }) {
   const [showOptionDialog, setShowOptionDialog] = useState(false);
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
+  useEffect(() => {
+    dispatch(checkLike(post._id))
+  }, [])
+  
   const buttonData = [
     ...(currentUser && post.user._id === currentUser._id
       ? [
@@ -41,7 +45,7 @@ function PostPreview({ post }) {
   ];
 
   const likePosts = () => {
-    dispatch(likePost(post._id));
+    dispatch(likePost(post._id,post.like.currentPage));
   };
   const followAction = (type, userId) => {
     dispatch(followActions(userId, type));
@@ -59,7 +63,7 @@ function PostPreview({ post }) {
       {showOptionDialog && (
         <OptionDialog hideElem={setShowOptionDialog} buttonData={buttonData} />
       )}
-      {showLikeElem && post.like.docs.length !== 0 && (
+      {showLikeElem && post.like.totalDocs !== 0 && (
         <UserDialog
           title="Like"
           hideElem={setShowLikeElem}
@@ -90,10 +94,7 @@ function PostPreview({ post }) {
             <div className="flex space-x-3 float-left">
               <i
                 className={`${
-                  post.like.docs.length !== 0 &&
-                  currentUser &&
-                  post.like.docs.findIndex(({ _id }) => _id === currentUser._id) !==
-                    -1
+                  post.likedPost 
                     ? "fas text-red-500"
                     : "far"
                 } fa-heart text-2xl cursor-pointer`}
@@ -115,7 +116,7 @@ function PostPreview({ post }) {
                 setShowLikeElem(true);
               }}
             >
-              {post.like.docs.length} users
+              {post.like?.totalDocs} users
             </button>
           </p>
           <p className="text-gray-600">

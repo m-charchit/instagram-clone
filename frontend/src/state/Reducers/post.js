@@ -11,11 +11,12 @@ const returnData = (state,action) => {
         let index = state.userPosts.docs.findIndex(({_id})=>_id === action.payload.post._id)
         if (index!==-1){
             state.userPosts.docs[index].comments = action.payload.post.comments.length  
-            state.userPosts.docs[index].like = action.payload.post.like.length  
+            state.userPosts.docs[index].like = action.payload.post.like.length
         }
     }
     if(state.posts){
-        state.posts.docs[state.posts.docs.findIndex(({_id})=>_id === action.payload.post._id)] = {...action.payload.post,comments:action.payload.post.comments.reverse()}
+        let  index = state.posts.docs.findIndex(({_id})=>_id === action.payload.post._id)
+        state.posts.docs[index] = {...state.posts.docs[index],...action.payload.post,like:state.posts.docs[index].like,comments:action.payload.post.comments.reverse()}
         return {
             ...state,
             posts:state.posts,
@@ -39,10 +40,24 @@ const post = (state={},action) => {
                 posts: reverseComments(state.posts  && state.posts.page !== action.payload.posts.page ?  {...action.payload.posts,docs:[...state.posts.docs, ...action.payload.posts.docs]} : action.payload.posts)
             }
         case "FETCH_LIKES" :
-            state.posts.docs[state.posts.docs.findIndex(({_id})=>_id === action.payload.post._id)] = {...action.payload.post,like:action.payload}
+            if (state.posts){
+
+                let id = state.posts.docs.findIndex(({_id})=>_id === action.payload.postId)
+                action.payload.like.docs = action.payload.like.currentPage !== 1 ? (state.posts.docs[id].like.nextPage !== action.payload.like.nextPage ?
+                    [...state.posts.docs[id].like.docs,...action.payload.like.docs] : state.posts.docs[id].like.docs) : action.payload.like.docs
+                    state.posts.docs[id] = {...state.posts.docs[id],like:action.payload.like}
+                }
+                else {
+
+                    action.payload.like.docs = action.payload.like.currentPage !== 1 ? (state.post.like.nextPage !== action.payload.like.nextPage ?
+                        [...state.post.like.docs,...action.payload.like.docs] : state.post.like.docs) : action.payload.like.docs
+                        state.post = {...state.post,like:action.payload.like
+                        }
+                    }                        
             return {
                 ...state,
-                posts: state.posts
+                posts: state?.posts,
+                post: state.post ? {...state.post,like:action.payload.like} : undefined
             }
         case "FETCH_POST_SUCCESS" :
             return {
@@ -79,7 +94,16 @@ const post = (state={},action) => {
                     ...state,
                     posts:action.payload
             }
-        
+        case "CHECK_LIKE_SUCCESS":
+            if(state.posts){
+                let index = state.posts.docs.findIndex(({_id})=>_id === action.payload.postId)
+                state.posts.docs[state.posts.docs.findIndex(({_id})=>_id === action.payload.postId)] = {...state.posts.docs[index],...action.payload.data}
+            }
+            return {
+                ...state,
+                post:state.post ? {...state.post,...action.payload.data} : undefined ,
+                posts:state.posts
+            }
         default:
             return state
     }

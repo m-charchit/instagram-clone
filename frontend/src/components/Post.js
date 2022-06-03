@@ -37,7 +37,7 @@ function Post() {
   }, [dispatch]);
 
   const likePosts = () => {
-    dispatch(likePost(post._id)).then((data) => {
+    dispatch(likePost(post._id,post.like?.currentPage)).then((data) => {
       dispatch(organizeComments(data));
     });
   };
@@ -91,11 +91,11 @@ function Post() {
   };
   return (
     <>
-      {showLikeElem && post && currentUser && post.like.docs.length !== 0 && (
+      {showLikeElem && post && currentUser && post.like.totalDocs !== 0 && (
         <UserDialog
-          title="Likes"
+          title="Like"
           hideElem={setShowLikeElem}
-          data={post.like.docs}
+          user={post}
           data2={currentUser.followings}
           followAction={followAction}
           crUsername={currentUser.username}
@@ -235,12 +235,7 @@ function Post() {
                 <div className="flex space-x-3 float-left">
                   <i
                     className={`${
-                      post &&
-                      post.like.docs.length !== 0 &&
-                      currentUser &&
-                      post.like.docs.findIndex(
-                        ({ _id }) => _id === currentUser._id
-                      ) !== -1
+                      post?.likedPost
                         ? "fas text-red-500"
                         : "far"
                     } fa-heart text-2xl cursor-pointer`}
@@ -258,7 +253,7 @@ function Post() {
                 <p className="font-thin">
                   Liked by{" "}
                   <button className="font-semibold" onClick={showElem}>
-                    {post.like.docs.length} users
+                    {post.like.totalDocs || post.like.length} users
                   </button>
                 </p>
               ) : (

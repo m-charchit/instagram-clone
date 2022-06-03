@@ -24,7 +24,7 @@ export const getLikes = (postId,page) => (dispatch) => {
         (data)=>{
             dispatch({
                 type:"FETCH_LIKES",
-                payload:data
+                payload:{...data,postId}
             })
             return Promise.resolve
         },
@@ -69,11 +69,29 @@ export const fetchPost = (postId) => (dispatch) => {
                 type:"FETCH_POST_SUCCESS",
                 payload:{posts: data }
             })
+            dispatch(checkLike(postId))
             return Promise.resolve(data)
         },
         (error)=>{
             dispatch({
                 type:"FETCH_POSTS_FAIL"
+            })
+            return Promise.reject
+        }
+    )
+}
+export const checkLike = (postId) => (dispatch) => {
+    return PostService.checkLike(postId).then(
+        (data)=>{
+            dispatch({
+                type:"CHECK_LIKE_SUCCESS",
+                payload:{data,postId}
+            })
+            return Promise.resolve(data)
+        },
+        (error)=>{
+            dispatch({
+                type:"CHECK_LIKE_FAIL"
             })
             return Promise.reject
         }
@@ -116,14 +134,16 @@ export const uploadPost = (caption) => (dispatch) => {
     )
 }
 
-export const likePost = (postId) => (dispatch) => {
-    return PostService.likePost(postId).then(
+export const likePost = (postId,page) => (dispatch) => {
+    return PostService.likePost(postId,page).then(
         (data)=>{
             console.log(data)
             dispatch({
                 type:"LIKE_POST_SUCCESS",
-                payload:{post: data }
+                payload:{post: {...data,_id:postId} }
             })
+            dispatch(getLikes(postId,page))
+            dispatch(checkLike(postId))
             return data
         },
         (error)=>{

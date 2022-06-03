@@ -10,6 +10,7 @@ import { getFollows } from '../state/Actions/user'
 function UserDialog(props) {
   const {title,hideElem,user,followAction,data2,crUsername} = props
   const data =  user[title.toLowerCase()]
+  console.log(data)
   const [progress, setProgress] = useState(true)
   const dispatch = useDispatch()
 
@@ -51,7 +52,7 @@ function UserDialog(props) {
             <div className='relative my-2 font-semibold flex justify-center items-center'>
                 <p className='w-full text-center '>{title}</p>
                 <i className="absolute right-2 fas fa-times text-3xl float-right cursor-pointer" onClick={()=>hideElem(false)}></i>
-            </div>
+            </div>  
             <hr />
             <div id='scrollTarget' className='h-20 overflow-auto'>
             { user && data  && <InfiniteScroll 
@@ -59,7 +60,7 @@ function UserDialog(props) {
             style={{ overflowY: "hidden" }}
             dataLength={data.docs.length}
             next={() => {
-              dispatch(title === "Like" ?getLikes(user._id,title.toLowerCase(),data.nextPage) :getFollows(user._id,title.toLowerCase(),data.nextPage)).then(() => {
+              dispatch(title === "Like" ?getLikes(user._id,data.nextPage) :getFollows(user._id,title.toLowerCase(),data.nextPage)).then(() => {
                 // setloading(false);console.log("S")
               });
               // setloading(true);

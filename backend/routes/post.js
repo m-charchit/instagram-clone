@@ -41,12 +41,30 @@ router.post("/fetchLikes",FetchUser,async (req,res)=> {
   }
 })
 
+router.post("/checkLike",FetchUser,async (req,res)=>{
+  const {postId} = req.body
+    try {
+        // @ts-ignore
+        const post = await Post.findById(postId).findOne({like:req.user.id})
+        if (post){
+            res.json({likedPost:true})
+        } else {
+            res.json({likedPost:false})
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).send("Internal Server Error")
+        
+    }
+})
+
 router.post("/fetchPost",FetchUser, async (req,res) => {
   try {
     const {postId} = req.body
     const post = await Post.findById(postId)
-    .populate("user","_id username").populate("comments.user","_id username").select("-_v")
-    res.json(post)
+    .populate("user","_id username").populate("comments.user","_id username").select("-_v -like")
+    const data = await paginate(Post,postId,1,"like")
+    res.json({...post.toObject(),...data})
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
@@ -71,6 +89,8 @@ router.post("/fetchUserPosts",async (req,res) => {
   }
 })
 
+
+
 router.post("/upload", FetchUser, async (req, res) => {
   try {
     const { caption } = req.body;
@@ -86,26 +106,26 @@ router.post("/upload", FetchUser, async (req, res) => {
 
 router.post("/like", FetchUser, async (req, res) => {
   try {
-    const { postId } = req.body;
+    const { postId,page } = req.body;
     // @ts-ignore
     const findPost = await Post.findById(postId).findOne({like:req.user.id})
     if(findPost){
       // @ts-ignore
-      const likedPost = await Post.findByIdAndUpdate(postId,{$pull:{like:req.user.id}},{new:true})
-      .populate("user","_id username").populate("comments.user","_id username").select("-_v")
-    res.json(likedPost);
-
+      const dislikedPost = await Post.findByIdAndUpdate(postId,{$pull:{like:req.user.id}},{new:true})
+      .populate("user","_id username").populate("comments.user","_id username").select("-_v ")
+      res.json(dislikedPost)
     }
     else{
-    const likedPost = await Post.findByIdAndUpdate(
-      postId,
-      // @ts-ignore
-      { $addToSet: { like: req.user.id } },
-      { new: true }
-    ).populate("user","_id username").populate("comments.user","_id username").select("-_v")
-    res.json(likedPost);
-    }
-    
+      const likedPost = await Post.findByIdAndUpdate(
+        postId,
+        // @ts-ignore
+        { $addToSet: { like: req.user.id } },
+        { new: true }
+        ).populate("user","_id username").populate("comments.user","_id username").select("-_v ")
+       res.json(likedPost) 
+      }
+    // const data = await paginate(Post,postId,page,"like")
+    // res.json(data)
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
