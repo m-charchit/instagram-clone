@@ -125,7 +125,7 @@ function Post() {
                   ></i>
                 )}
             </div>
-            <div className="flex border-b h-full overflow-auto flex-col p-4 space-y-5">
+            <div className="flex border-b h-96 overflow-auto flex-col p-4 space-y-5">
               <div className="flex space-x-3">
                 <img src="/default.jpg" alt="" className="w-8 h-8 " />
                 <p>
@@ -137,6 +137,7 @@ function Post() {
                   {post && post.caption}
                 </p>
               </div>
+              <hr className="mx-12"/>
               {post ? (
                 post.comments.length !== 0 &&
                 post.comments.map((comment) => {

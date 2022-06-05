@@ -6,12 +6,14 @@ import { Link } from 'react-router-dom'
 import LoadingBar from 'react-topbar-progress-indicator'
 import { getLikes } from '../state/Actions/post'
 import { getFollows } from '../state/Actions/user'
+import Spinner from './Spinner'
 
 function UserDialog(props) {
   const {title,hideElem,user,followAction,data2,crUsername} = props
   const data =  user[title.toLowerCase()]
   console.log(data)
   const [progress, setProgress] = useState(true)
+  const [loading, setloading] = useState(false)
   const dispatch = useDispatch()
 
   useEffect(()=>{
@@ -54,16 +56,16 @@ function UserDialog(props) {
                 <i className="absolute right-2 fas fa-times text-3xl float-right cursor-pointer" onClick={()=>hideElem(false)}></i>
             </div>  
             <hr />
-            <div id='scrollTarget' className='h-20 overflow-auto'>
+            <div id='scrollTarget' className='h-96 overflow-auto'>
             { user && data  && <InfiniteScroll 
             scrollThreshold={"10px"}
             style={{ overflowY: "hidden" }}
             dataLength={data.docs.length}
             next={() => {
               dispatch(title === "Like" ?getLikes(user._id,data.nextPage) :getFollows(user._id,title.toLowerCase(),data.nextPage)).then(() => {
-                // setloading(false);console.log("S")
+                setloading(false);console.log("S")
               });
-              // setloading(true);
+              setloading(true);
             }}
             hasMore={data.hasNextPage}
             scrollableTarget={"scrollTarget"}
@@ -81,6 +83,7 @@ function UserDialog(props) {
             </div>)
             })}
             </InfiniteScroll>}
+            {loading && <Spinner/>}
             { progress && <LoadingBar/>}
             </div>
         </div>

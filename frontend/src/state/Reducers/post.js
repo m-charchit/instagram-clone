@@ -15,6 +15,7 @@ const returnData = (state,action) => {
         }
     }
     if(state.posts){
+        console.log("Se")
         let  index = state.posts.docs.findIndex(({_id})=>_id === action.payload.post._id)
         state.posts.docs[index] = {...state.posts.docs[index],...action.payload.post,like:state.posts.docs[index].like,comments:action.payload.post.comments.reverse()}
         return {
@@ -25,7 +26,7 @@ const returnData = (state,action) => {
     }
         return {
             ...state,
-            post:action.payload.post,
+            post:{like:state.post.like,likedPost:state.post.likedPost,...action.payload.post,comments:action.payload.post.comments.reverse()},
             userPosts:state.userPosts
 
     }
@@ -60,14 +61,15 @@ const post = (state={},action) => {
                 post: state.post ? {...state.post,like:action.payload.like} : undefined
             }
         case "FETCH_POST_SUCCESS" :
+            console.log(action.payload.posts)
             return {
                 ...state,
-                post: action.payload.posts
+                post: {...action.payload.posts,comments:action.payload.posts.comments.reverse()}
             }
         case "ORGANIZE_POST_SUCCESS" :
             return {
                 ...state,
-                post: action.payload.posts
+                post: {like:state.post.like,likedPost:state.post.likedPost,...action.payload.posts}
             }
         case "FETCH_USER_POSTS" :
             return {

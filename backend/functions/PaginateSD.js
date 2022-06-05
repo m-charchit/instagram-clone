@@ -2,7 +2,7 @@
 const { default: mongoose } = require("mongoose");
 
 const paginate = async (Model,id,page,type) => {
-    let limit = 2
+    let limit = 20
     id = mongoose.Types.ObjectId(id)
     console.log(id)
         const totalDocs = await Model.aggregate([

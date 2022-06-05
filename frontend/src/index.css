@@ -13,7 +13,7 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: #e9e7e9;
+    background: inherit;
 }
 
 ::-webkit-scrollbar-thumb:active {

@@ -192,7 +192,7 @@ router.post("/deleteComment",FetchUser,async(req,res)=>{
       const a = await getId(post.comments,[])
       // @ts-ignore
       const posts = await Post.findOneAndUpdate({"comments.user":req.user.id,"comments._id":commentId},{$pull:{"comments":{_id:a}}},{new:true})
-      .populate("user","_id username").populate("comments.user","_id username").select("-_v")
+      .populate("user","_id username").populate("comments.user","_id username").select("-_v -like")
       res.json(posts)
     } catch (error) {
       console.log(error);
@@ -210,7 +210,7 @@ FetchUser,async( req, res )=>{
     }
     const {com,postId,parentCommentId} = req.body
     const post = await Post.findByIdAndUpdate(postId,{$push: {comments:{comment:com,parentComment:parentCommentId,post:postId,user:req.user.id}}},{new:true})
-    .populate("user","_id username").populate("comments.user","_id username").select("-_v")
+    .populate("user","_id username").populate("comments.user","_id username").select("-_v -like")
     res.json(post)
   } catch (error) {
     console.log(error);

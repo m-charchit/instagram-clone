@@ -56,6 +56,7 @@ export const organizeComments = (post) => (dispatch) => {
     post.comments = post.comments.filter((item)=>{
       return item.parentComment === undefined
     })
+    console.log(post,"Sef")
        dispatch({
                 type:"ORGANIZE_POST_SUCCESS",
                 payload:{posts: post }

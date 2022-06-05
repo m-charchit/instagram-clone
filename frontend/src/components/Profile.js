@@ -245,7 +245,7 @@ function Profile() {
                 </div>
               </InfiniteScroll>
             )}
-            {loading && <Spinner />}
+            {loading && <Spinner size={"large"}/>}
           </div>
         </div>
       </>

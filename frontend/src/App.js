@@ -7,7 +7,7 @@ import EditProfile from "./components/EditProfile";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import NotFound from "./components/NotFound";
-import { Route } from "react-router-dom";
+import { Route , useLocation } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import { useDispatch } from "react-redux";
 import { getCurrentUser } from "./state/Actions/user";
@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [dispatch]);
-
+  const location = useLocation()
   return (
     <>
       <Navbar />
@@ -49,7 +49,7 @@ function App() {
         </Route>
         <Route path="*" element={<NotFound />} />
       </CustomSwitch>
-      <Footer/>
+      {location.pathname.startsWith("/post/") === false && <Footer/>}
     </>
   );
 }
