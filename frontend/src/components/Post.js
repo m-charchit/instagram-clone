@@ -13,6 +13,8 @@ import {
   organizeComments,
 } from "../state/Actions/post";
 import { followActions } from "../state/Actions/user";
+import NotFound from "./NotFound";
+import OptionDialog from "./OptionDialog";
 import UserDialog from "./UsersDialog";
 
 function Post() {
@@ -20,10 +22,12 @@ function Post() {
   const { currentUser } = useSelector((state) => state.user);
   // @ts-ignore
   let { post } = useSelector((state) => state.post);
+  const [error, setError] = useState(false)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showLikeElem, setShowLikeElem] = useState(false);
   const [replyCommentId, SetReplyCommentId] = useState(undefined);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const [comment, setComment] = useState("");
   const inputEl = useRef(null);
   const replyToEl = useRef(null);
@@ -33,6 +37,8 @@ function Post() {
   useEffect(() => {
     dispatch(fetchPost(postId)).then((data) => {
       dispatch(organizeComments(data));
+    }).catch(()=>{
+      setError(true)
     });
   }, [dispatch]);
 
@@ -89,8 +95,28 @@ function Post() {
   const commentIconClick = () => {
     inputEl.current.focus();
   };
+  if (error){
+    return <NotFound/>
+  }
+  else if (post) {
+
   return (
     <>
+    {showConfirmDialog && <OptionDialog
+          title={
+            "Are you sure of deleting the post. Once you delete, it's gone forever!"
+          }
+          hideElem={setShowConfirmDialog}
+          buttonData={[
+            {
+              msg: "Delete",
+              color: "red",
+              fun: () => {
+                dltPost()
+              },
+            },
+          ]}
+        />}
       {showLikeElem && post && currentUser && post.like.totalDocs !== 0 && (
         <UserDialog
           title="Like"
@@ -121,7 +147,7 @@ function Post() {
                 post.user.username === currentUser.username && (
                   <i
                     className="fas fa-trash-alt text-gray-500 float-right ml-auto my-auto"
-                    onClick={dltPost}
+                    onClick={()=>setShowConfirmDialog(true)}
                   ></i>
                 )}
             </div>
@@ -295,6 +321,8 @@ function Post() {
       </div>
     </>
   );
+              }
 }
+
 
 export default Post;

@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { addComment, checkLike, deletePost, likePost } from "../state/Actions/post";
+import {
+  addComment,
+  checkLike,
+  deletePost,
+  likePost,
+} from "../state/Actions/post";
 import { followActions } from "../state/Actions/user";
 import OptionDialog from "./OptionDialog";
 import UserDialog from "./UsersDialog";
@@ -12,12 +17,13 @@ function PostPreview({ post }) {
   const dispatch = useDispatch();
   const [showLikeElem, setShowLikeElem] = useState(false);
   const [showOptionDialog, setShowOptionDialog] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
-    dispatch(checkLike(post._id))
-  }, [])
-  
+    dispatch(checkLike(post._id));
+  }, []);
+
   const buttonData = [
     ...(currentUser && post.user._id === currentUser._id
       ? [
@@ -25,7 +31,8 @@ function PostPreview({ post }) {
             msg: "Delete",
             color: "red",
             fun: () => {
-              dispatch(deletePost(post._id));
+              setShowOptionDialog(false);
+              setShowConfirmDialog(true);
             },
           },
         ]
@@ -45,7 +52,7 @@ function PostPreview({ post }) {
   ];
 
   const likePosts = () => {
-    dispatch(likePost(post._id,post.like.currentPage));
+    dispatch(likePost(post._id, post.like.currentPage));
   };
   const followAction = (type, userId) => {
     dispatch(followActions(userId, type));
@@ -60,6 +67,23 @@ function PostPreview({ post }) {
   };
   return (
     <>
+      {showConfirmDialog && (
+        <OptionDialog
+          title={
+            "Are you sure of deleting the post. Once you delete, it's gone forever!"
+          }
+          hideElem={setShowConfirmDialog}
+          buttonData={[
+            {
+              msg: "Delete",
+              color: "red",
+              fun: () => {
+                dispatch(deletePost(post._id));
+              },
+            },
+          ]}
+        />
+      )}
       {showOptionDialog && (
         <OptionDialog hideElem={setShowOptionDialog} buttonData={buttonData} />
       )}
@@ -67,7 +91,7 @@ function PostPreview({ post }) {
         <UserDialog
           title="Like"
           hideElem={setShowLikeElem}
-          user={post }
+          user={post}
           data2={currentUser && currentUser.followings}
           followAction={followAction}
           crUsername={currentUser.username}
@@ -94,9 +118,7 @@ function PostPreview({ post }) {
             <div className="flex space-x-3 float-left">
               <i
                 className={`${
-                  post.likedPost 
-                    ? "fas text-red-500"
-                    : "far"
+                  post.likedPost ? "fas text-red-500" : "far"
                 } fa-heart text-2xl cursor-pointer hover:opacity-70 active:scale-125 transition-all`}
                 onClick={likePosts}
               ></i>

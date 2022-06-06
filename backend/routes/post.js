@@ -63,8 +63,12 @@ router.post("/fetchPost",FetchUser, async (req,res) => {
     const {postId} = req.body
     const post = await Post.findById(postId)
     .populate("user","_id username").populate("comments.user","_id username").select("-_v -like")
-    const data = await paginate(Post,postId,1,"like")
-    res.json({...post.toObject(),...data})
+    if (post) {
+      const data = await paginate(Post,postId,1,"like")
+      res.json({...post.toObject(),...data})
+    } else {
+      res.status(404).send("Not Found")
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");

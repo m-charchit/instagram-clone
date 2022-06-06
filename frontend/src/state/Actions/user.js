@@ -71,7 +71,6 @@ export const checkFollow = (userId) => (dispatch) =>{
             type:"FOLLOW_CHECK_SUCCESS",
             payload:userData
         })
-        console.log("dispatched")
         return Promise.resolve
     })
     .catch((error)=>{
