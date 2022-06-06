@@ -97,7 +97,7 @@ function PostPreview({ post }) {
                   post.likedPost 
                     ? "fas text-red-500"
                     : "far"
-                } fa-heart text-2xl cursor-pointer`}
+                } fa-heart text-2xl cursor-pointer hover:opacity-70 active:scale-125 transition-all`}
                 onClick={likePosts}
               ></i>
 

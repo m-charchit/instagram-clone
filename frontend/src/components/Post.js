@@ -137,7 +137,7 @@ function Post() {
                   {post && post.caption}
                 </p>
               </div>
-              <hr className="mx-12"/>
+              <hr className="mx-12 "/>
               {post ? (
                 post.comments.length !== 0 &&
                 post.comments.map((comment) => {
@@ -239,7 +239,7 @@ function Post() {
                       post?.likedPost
                         ? "fas text-red-500"
                         : "far"
-                    } fa-heart text-2xl cursor-pointer`}
+                    } fa-heart text-2xl cursor-pointer hover:opacity-70 active:scale-125 transition-all`}
                     onClick={likePosts}
                   ></i>
                   <i

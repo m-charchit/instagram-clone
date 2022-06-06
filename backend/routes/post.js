@@ -148,10 +148,8 @@ router.post("/delete",FetchUser,async (req,res)=>{
     const { postId } = req.body;
     console.log(postId)
     // @ts-ignore
-    console.log(await Post.findOneAndDelete({_id:postId,user:req.user.id}))
-    const posts = await Post.find({user:{$in:[req.user.followings,req.user.id]}})
-    .populate("user","_id username").populate("comments.user","_id username").select("-_v")
-    res.json(posts);
+    const deletedPost = await Post.findOneAndDelete({_id:postId,user:req.user.id})
+    res.json({deletedPostId:deletedPost.toObject()._id});
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");

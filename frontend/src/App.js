@@ -7,7 +7,7 @@ import EditProfile from "./components/EditProfile";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import NotFound from "./components/NotFound";
-import { Route , useLocation } from "react-router-dom";
+import {  Route , useLocation } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import { useDispatch } from "react-redux";
 import { getCurrentUser } from "./state/Actions/user";

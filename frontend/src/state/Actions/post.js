@@ -199,7 +199,7 @@ export const deletePost = (postId) => (dispatch) => {
                 type:"DELETE_POST_SUCCESS",
                 payload:data
             })
-            return data
+            return Promise.resolve()
         },
         (error)=>{
             dispatch({
